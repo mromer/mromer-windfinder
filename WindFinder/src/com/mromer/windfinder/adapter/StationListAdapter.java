@@ -1,6 +1,7 @@
 package com.mromer.windfinder.adapter;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,16 +13,21 @@ import android.widget.TextView;
 
 import com.mromer.windfinder.R;
 import com.mromer.windfinder.bean.Station;
+import com.mromer.windfinder.utils.SharedPreferencesUtil;
 
 public class StationListAdapter extends BaseAdapter implements OnClickListener{
 
 	private Context context;
 
 	private List<Station> listStation;
+	
+	private Map<String, String> stationsSelected;
 
 	public StationListAdapter(Context context, List<Station> listStation) {
 		this.context = context;
 		this.listStation = listStation;
+		
+		stationsSelected = SharedPreferencesUtil.getStationsSelected(context);
 	}
 
 
@@ -52,10 +58,30 @@ public class StationListAdapter extends BaseAdapter implements OnClickListener{
 		}
 		
 		TextView name = (TextView) convertView.findViewById(R.id.name);
-		name.setText(station.getName());        
+		name.setText(station.getName());  
+		
+		
+		if (stationsSelected.get(station.getId()) != null) {
+			// It is selected
+			
+			convertView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_orange_dark));
+			
+			
+		} else {
+			
+			convertView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_green_light));
+		}
 		
 		
 		return convertView;
+	}
+	
+	@Override
+	public void notifyDataSetChanged() {		
+		
+		stationsSelected = SharedPreferencesUtil.getStationsSelected(context);
+		
+		super.notifyDataSetChanged();
 	}
 	
 	

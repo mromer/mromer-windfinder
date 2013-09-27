@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.mromer.windfinder.adapter.StationListAdapter;
@@ -92,8 +95,40 @@ public class StationActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView listView, View v, int position, long id) {
 		
-	
+		Station station = (Station) getListAdapter().getItem(position);	
+		
+		
+		SharedPreferences prefs = this.getSharedPreferences(
+			      "stations", Context.MODE_PRIVATE);
+		
+		String stationId = prefs.getString(station.getId(), null);
+
+		if (stationId == null) {
+			addStationToSharedPreferences(station);
+		} else {
+			removeStationToSharedPreferences(station);
+		}	
+		
+		((BaseAdapter) getListAdapter()).notifyDataSetChanged();
 	  
+	}
+	
+	private void addStationToSharedPreferences(Station station) {
+		
+		SharedPreferences prefs = this.getSharedPreferences(
+			      "stations", Context.MODE_PRIVATE);		
+		
+		
+		prefs.edit().putString(station.getId(), station.getId()).commit();
+		
+	}
+	
+	private void removeStationToSharedPreferences(Station station) {
+		
+		SharedPreferences prefs = this.getSharedPreferences(
+			      "stations", Context.MODE_PRIVATE);
+		
+		prefs.edit().remove(station.getId()).commit();
 	}
 
 	@Override
