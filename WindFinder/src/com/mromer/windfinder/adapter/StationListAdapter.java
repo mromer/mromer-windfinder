@@ -64,12 +64,12 @@ public class StationListAdapter extends BaseAdapter implements OnClickListener{
 		if (stationsSelected.get(station.getId()) != null) {
 			// It is selected
 			
-			convertView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_orange_dark));
+			convertView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_bright));
 			
 			
 		} else {
 			
-			convertView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_green_light));
+			convertView.setBackgroundResource(android.R.drawable.list_selector_background);
 		}
 		
 		

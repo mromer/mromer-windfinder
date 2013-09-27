@@ -3,12 +3,12 @@ package com.mromer.windfinder;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -21,121 +21,116 @@ import com.mromer.windfinder.task.LoadTaskResultI;
 import com.mromer.windfinder.task.LoadXmlTask;
 import com.mromer.windfinder.task.TaskResult;
 import com.mromer.windfinder.utils.AlertUtils;
+import com.mromer.windfinder.utils.SharedPreferencesUtil;
 
-public class StationActivity extends ListActivity {
-	
+public class StationActivity extends SelectStationMainActivity {
+
 	private final String TAG = this.getClass().getName();
-	
+
 	private ContinentManager continentManager;
-	
+
 	private String continentId;
 	private String countryId;
 	private String regionId;
-	
-	private ArrayList<Continent> continentList;
+
+	private ArrayList<Continent> continentList;	
+
+	private ListView listView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		Log.d(TAG, "onCreate " + TAG);
+		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.continents);
-		
-		continentId = getIntent().getExtras().getString("CONTINENT_ID");
-		countryId = getIntent().getExtras().getString("COUNTRY_ID");
-		regionId = getIntent().getExtras().getString("REGION_ID");
-		
+
+		setActionBar(R.string.select_station);
+
+		setIntentData();
+
+		setUIComponents();
+
+		drawListProcess();
+
+	}
+
+	private void drawListProcess() {
+
 		continentManager = ContinentManager.getInstance(this);
-		
+
 		continentList = ContinentManager.getInstance(this).getAllContinents();;
-		
+
 		if (continentList == null) {			
-			
+
 			new LoadXmlTask(this, new LoadTaskResultI() {
-				
+
 				@Override
 				public void taskSuccess(TaskResult result) {
 					continentList = continentManager.getAllContinents();
-					
+
 					Region region = continentManager.getRegionById(continentId, countryId, regionId);
 
 					drawList(region.getStationList());				
-					
+
 				}
-				
+
 				@Override
 				public void taskFailure(TaskResult result) {
 
 					AlertUtils.showAlert(StationActivity.this, result.getDesc(), "aceptar");
-					
+
 				}
 			}).execute();
 
 
-			
+
 		} else {
-			
+
 			Region region = continentManager.getRegionById(continentId, countryId, regionId);
 
 			drawList(region.getStationList());
-			
-		}		
-		
+
+		}	
+
+	}
+
+	private void setIntentData() {
+		continentId = getIntent().getExtras().getString("CONTINENT_ID");
+		countryId = getIntent().getExtras().getString("COUNTRY_ID");
+		regionId = getIntent().getExtras().getString("REGION_ID");		
 	}
 
 	private void drawList(List<Station> stations) {
 		if (stations != null) {
-						
+
 			StationListAdapter adapter = new StationListAdapter(this, stations);
-	        getListView().setAdapter(adapter);
-	        
+			listView.setAdapter(adapter);
+
 		}
-		
+
 	}
-	
-	
+
+
 	@Override
-	protected void onListItemClick(ListView listView, View v, int position, long id) {
-		
-		Station station = (Station) getListAdapter().getItem(position);	
-		
-		
+	protected void onListItemClick(AdapterView<?> adapterView, View v, int position, long id) {
+
+		Station station = (Station) adapterView.getAdapter().getItem(position);	
+
+
 		SharedPreferences prefs = this.getSharedPreferences(
-			      "stations", Context.MODE_PRIVATE);
-		
+				"stations", Context.MODE_PRIVATE);
+
 		String stationId = prefs.getString(station.getId(), null);
 
 		if (stationId == null) {
-			addStationToSharedPreferences(station);
+			SharedPreferencesUtil.addStationToSharedPreferences(this, station);
 		} else {
-			removeStationToSharedPreferences(station);
+			SharedPreferencesUtil.removeStationToSharedPreferences(this, station);
 		}	
-		
-		((BaseAdapter) getListAdapter()).notifyDataSetChanged();
-	  
-	}
-	
-	private void addStationToSharedPreferences(Station station) {
-		
-		SharedPreferences prefs = this.getSharedPreferences(
-			      "stations", Context.MODE_PRIVATE);		
-		
-		
-		prefs.edit().putString(station.getId(), station.getId()).commit();
-		
-	}
-	
-	private void removeStationToSharedPreferences(Station station) {
-		
-		SharedPreferences prefs = this.getSharedPreferences(
-			      "stations", Context.MODE_PRIVATE);
-		
-		prefs.edit().remove(station.getId()).commit();
+
+		((BaseAdapter) adapterView.getAdapter()).notifyDataSetChanged();
+
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.country, menu);
-		return true;
-	}
 
 }
