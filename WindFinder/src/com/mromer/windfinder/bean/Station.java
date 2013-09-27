@@ -14,8 +14,56 @@ public class Station implements Parcelable {
 	private String report;
 	private String forecast;
 	private String wavereport;
-	private String waveforecast;
+	private String waveforecast;	
+	
+	
+	private Station(Parcel in) {
+		id = in.readString();
+		name = in.readString();
+		keyword = in.readString();
+		superforecast = in.readString();
+		statistic = in.readString();
+		report = in.readString();
+		forecast = in.readString();
+		wavereport = in.readString();
+		waveforecast = in.readString();		
+	}
+	
+	public Station() {
+		
+	}
+	
+	public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
+		public Station createFromParcel(Parcel in) {
+			return new Station(in);
+		}
 
+		public Station[] newArray(int size) {
+			return new Station[size];
+		}
+	};
+
+
+	@Override
+	public int describeContents() {
+		
+		return 0;
+	}
+
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(id);
+		dest.writeString(name);
+		dest.writeString(keyword);
+		dest.writeString(superforecast);
+		dest.writeString(statistic);
+		dest.writeString(report);
+		dest.writeString(forecast);
+		dest.writeString(wavereport);
+		dest.writeString(waveforecast);		
+	}
+	
 
 	public String getId() {
 		return id;
@@ -143,20 +191,5 @@ public class Station implements Parcelable {
 		return result.toString();
 	}
 
-
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-
-	@Override
-	public void writeToParcel(Parcel arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
-	}	
 
 }

@@ -4,103 +4,95 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 
-import com.mromer.windfinder.adapter.CountryListAdapter;
+import com.mromer.windfinder.adapter.StationListAdapter;
 import com.mromer.windfinder.bean.Continent;
-import com.mromer.windfinder.bean.Country;
+import com.mromer.windfinder.bean.Region;
+import com.mromer.windfinder.bean.Station;
 import com.mromer.windfinder.manager.ContinentManager;
 import com.mromer.windfinder.task.LoadTaskResultI;
 import com.mromer.windfinder.task.LoadXmlTask;
 import com.mromer.windfinder.task.TaskResult;
 import com.mromer.windfinder.utils.AlertUtils;
 
-public class CountryActivity extends ListActivity {
+public class StationActivity extends ListActivity {
 	
 	private final String TAG = this.getClass().getName();
 	
 	private ContinentManager continentManager;
 	
 	private String continentId;
+	private String countryId;
+	private String regionId;
 	
 	private ArrayList<Continent> continentList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.continents);
 		
-		continentId = getIntent().getExtras().getString("CONTINENT_ID");			
+		continentId = getIntent().getExtras().getString("CONTINENT_ID");
+		countryId = getIntent().getExtras().getString("COUNTRY_ID");
+		regionId = getIntent().getExtras().getString("REGION_ID");
 		
 		continentManager = ContinentManager.getInstance(this);
 		
 		continentList = ContinentManager.getInstance(this).getAllContinents();;
 		
-		if (continentList == null) {
-			
-			
-			continentList = continentManager.getAllContinents();	
+		if (continentList == null) {			
 			
 			new LoadXmlTask(this, new LoadTaskResultI() {
 				
 				@Override
 				public void taskSuccess(TaskResult result) {
 					continentList = continentManager.getAllContinents();
-					Continent continent = continentManager.getContinentById(continentId);
+					
+					Region region = continentManager.getRegionById(continentId, countryId, regionId);
 
-					drawList(continent.getCountryList());					
+					drawList(region.getStationList());				
 					
 				}
 				
 				@Override
 				public void taskFailure(TaskResult result) {
 
-					AlertUtils.showAlert(CountryActivity.this, result.getDesc(), "aceptar");
+					AlertUtils.showAlert(StationActivity.this, result.getDesc(), "aceptar");
 					
 				}
 			}).execute();
+
+
 			
 		} else {
 			
-			Continent continent = continentManager.getContinentById(continentId);
+			Region region = continentManager.getRegionById(continentId, countryId, regionId);
 
-			drawList(continent.getCountryList());
-		}
+			drawList(region.getStationList());
 			
-		
+		}		
 		
 	}
 
-	private void drawList(List<Country> countries) {
-		if (countries != null) {
+	private void drawList(List<Station> stations) {
+		if (stations != null) {
 						
-			CountryListAdapter adapter = new CountryListAdapter(this, countries);
+			StationListAdapter adapter = new StationListAdapter(this, stations);
 	        getListView().setAdapter(adapter);
 	        
 		}
 		
 	}
 	
+	
 	@Override
 	protected void onListItemClick(ListView listView, View v, int position, long id) {
 		
-		Country country = (Country) listView.getAdapter().getItem(position);
-		
-		Log.d(TAG, "country " + country.getName());
-		
-		Intent intent = new Intent(this, RegionActivity.class);
-	    
-		intent.putExtra("COUNTRY_ID", country.getId());
-		
-		intent.putExtra("CONTINENT_ID", continentId);
-	    
-	    startActivity(intent);
+	
 	  
 	}
 

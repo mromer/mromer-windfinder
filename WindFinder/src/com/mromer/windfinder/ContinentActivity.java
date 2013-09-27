@@ -3,24 +3,63 @@ package com.mromer.windfinder;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ListView;
 
 import com.mromer.windfinder.adapter.CotinentListAdapter;
 import com.mromer.windfinder.bean.Continent;
-import com.mromer.windfinder.utils.XmlParseUtil;
+import com.mromer.windfinder.manager.ContinentManager;
+import com.mromer.windfinder.task.LoadTaskResultI;
+import com.mromer.windfinder.task.LoadXmlTask;
+import com.mromer.windfinder.task.TaskResult;
+import com.mromer.windfinder.utils.AlertUtils;
 
 public class ContinentActivity extends ListActivity  {
+	
+	private final String TAG = this.getClass().getName();	
+	
+	private ArrayList<Continent> continents;
+	
+	private ContinentManager continentManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.continents);
 		
-		ArrayList<Continent> continents = new XmlParseUtil().getContinents(this);
+		continentManager = ContinentManager.getInstance(this);
 		
+		continents = continentManager.getAllContinents();
 		
-		drawList(continents);
+		if (continents == null) {
+			
+			new LoadXmlTask(this, new LoadTaskResultI() {
+				
+				@Override
+				public void taskSuccess(TaskResult result) {
+					continents = continentManager.getAllContinents();
+					drawList(continents);
+					
+				}
+				
+				@Override
+				public void taskFailure(TaskResult result) {
+
+					AlertUtils.showAlert(ContinentActivity.this, result.getDesc(), "aceptar");
+					
+				}
+			}).execute();			
+			
+		} else {
+			
+			drawList(continents);
+			
+		}
+		
 		
 		
 	}
@@ -41,5 +80,29 @@ public class ContinentActivity extends ListActivity  {
 		getMenuInflater().inflate(R.menu.country, menu);
 		return true;
 	}
+	
+	@Override
+	protected void onListItemClick(ListView listView, View v, int position, long id) {
+		
+		Continent continent = (Continent) listView.getAdapter().getItem(position);
+		
+		Log.d(TAG, "continent " + continent.getName());
+		
+		Intent intent = new Intent(this, CountryActivity.class);
+	    
+	    intent.putExtra("CONTINENT_ID", continent.getId());
+	    
+	    startActivity(intent);
+	  
+	}
+
+	public ArrayList<Continent> getContinents() {
+		return continents;
+	}
+
+	public void setContinents(ArrayList<Continent> continents) {
+		this.continents = continents;
+	}	
+	
 
 }

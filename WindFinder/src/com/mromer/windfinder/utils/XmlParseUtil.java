@@ -199,47 +199,6 @@ public class XmlParseUtil {
 			return station;
 		}
 
-	// Processes title tags in the feed.
-	private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
-		parser.require(XmlPullParser.START_TAG, ns, "title");
-		String title = readText(parser);
-		parser.require(XmlPullParser.END_TAG, ns, "title");
-		return title;
-	}
-
-	// Processes link tags in the feed.
-	private String readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
-		String link = "";
-		parser.require(XmlPullParser.START_TAG, ns, "link");
-		String tag = parser.getName();
-		String relType = parser.getAttributeValue(null, "rel");  
-		if (tag.equals("link")) {
-			if (relType.equals("alternate")){
-				link = parser.getAttributeValue(null, "href");
-				parser.nextTag();
-			} 
-		}
-		parser.require(XmlPullParser.END_TAG, ns, "link");
-		return link;
-	}
-
-	// Processes summary tags in the feed.
-	private String readSummary(XmlPullParser parser) throws IOException, XmlPullParserException {
-		parser.require(XmlPullParser.START_TAG, ns, "summary");
-		String summary = readText(parser);
-		parser.require(XmlPullParser.END_TAG, ns, "summary");
-		return summary;
-	}
-
-	// For the tags title and summary, extracts their text values.
-	private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
-		String result = "";
-		if (parser.next() == XmlPullParser.TEXT) {
-			result = parser.getText();
-			parser.nextTag();
-		}
-		return result;
-	}
 
 	private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
 		if (parser.getEventType() != XmlPullParser.START_TAG) {

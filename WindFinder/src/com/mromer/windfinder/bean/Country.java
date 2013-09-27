@@ -1,8 +1,12 @@
 package com.mromer.windfinder.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Country {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Country implements Parcelable {
 
 	private String id;
 	private String name;
@@ -12,6 +16,42 @@ public class Country {
 		this.id = id;
 		this.name = name;			
 		this.regionList = regionList;
+	}
+	
+	
+	private Country(Parcel in) {
+		id = in.readString();
+		name = in.readString();
+		
+		regionList = new ArrayList<Region>();
+		in.readList(regionList, Region.class.getClassLoader());
+					
+	}	
+	
+	
+	public static final Parcelable.Creator<Country> CREATOR = new Parcelable.Creator<Country>() {
+		public Country createFromParcel(Parcel in) {
+			return new Country(in);
+		}
+
+		public Country[] newArray(int size) {
+			return new Country[size];
+		}
+	};
+
+
+	@Override
+	public int describeContents() {
+		
+		return 0;
+	}
+
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(id);
+		dest.writeString(name);		
+		dest.writeList(regionList);
 	}
 
 	public String getId() {
