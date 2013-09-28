@@ -1,12 +1,14 @@
 package com.mromer.windfinder.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mromer.windfinder.bean.Forecast;
 import com.mromer.windfinder.fragment.WindInfoSlidePageFragment;
 
 /**
@@ -15,22 +17,24 @@ import com.mromer.windfinder.fragment.WindInfoSlidePageFragment;
  */
 public class WindInfoSlidePagerAdapter extends FragmentStatePagerAdapter {
 
-	ArrayList<String> windCards;
+	ArrayList<Forecast> windCards;
 
 	public WindInfoSlidePagerAdapter(FragmentManager fm, 
-			ArrayList<String> windCards) {
+			List<Forecast> list) {
 
 		super(fm);           
-		this.windCards = windCards;
+		this.windCards = (ArrayList<Forecast>) list;
 
 	}
 
 	@Override
 	public Fragment getItem(int position) {
+		
+		Forecast forecast = windCards.get(position);
 
 		Fragment f = new WindInfoSlidePageFragment();
 		Bundle b = new Bundle();
-		b.putString("key", "value");		
+		b.putSerializable("FORECAST_INFO", forecast);		
 
 		f.setArguments(b);					
 

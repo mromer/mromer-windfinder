@@ -1,6 +1,9 @@
 package com.mromer.windfinder;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +12,10 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.mromer.windfinder.adapter.WindInfoSlidePagerAdapter;
+import com.mromer.windfinder.task.ForecastLoadTaskResultI;
+import com.mromer.windfinder.task.ForecastTaskResult;
+import com.mromer.windfinder.task.GetForecastTask;
+import com.mromer.windfinder.utils.SharedPreferencesUtil;
 
 public class WindInfoActivity extends FragmentActivity  {
 
@@ -35,16 +42,46 @@ public class WindInfoActivity extends FragmentActivity  {
 		
 		setContentView(R.layout.wind_info);
 		
-		ArrayList<String> windCards = new ArrayList<String>();
-		windCards.add("1");
-		windCards.add("2");
-		windCards.add("3");
+		
+		Map<String, String> stationsSelected = SharedPreferencesUtil.getStationsSelected(this);
+		
+		
+		List<String> stations = new ArrayList<String>();
+		for (String key : stationsSelected.keySet()) {
+			
+			stations.add(key);
+			
+		}
+		
+		
+		new GetForecastTask(this, new ForecastLoadTaskResultI() {
+			
+			@Override
+			public void taskSuccess(ForecastTaskResult result) {
+				createViewPager(result);
+				
+			}
+			
+			@Override
+			public void taskFailure(ForecastTaskResult result) {
+				// TODO Auto-generated method stub
+				
+			}
+		}, stations).execute();
+		
+		
+
+	}
+	
+	
+	private void createViewPager(ForecastTaskResult forecastTaskResult) {
+				
 		
 		mPager = (ViewPager) findViewById(R.id.pager);
-		mPagerAdapter = new WindInfoSlidePagerAdapter(getSupportFragmentManager(), windCards);	
+		mPagerAdapter = new WindInfoSlidePagerAdapter(getSupportFragmentManager(), 
+				forecastTaskResult.getForecastList());	
 		
 		mPager.setAdapter(mPagerAdapter);
-
 	}
 
 

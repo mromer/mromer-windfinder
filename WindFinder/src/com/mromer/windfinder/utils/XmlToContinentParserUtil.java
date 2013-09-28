@@ -18,7 +18,7 @@ import com.mromer.windfinder.bean.Country;
 import com.mromer.windfinder.bean.Region;
 import com.mromer.windfinder.bean.Station;
 
-public class XmlParseUtil {
+public class XmlToContinentParserUtil {
 
 	// We don't use namespaces
 	private static final String ns = null;

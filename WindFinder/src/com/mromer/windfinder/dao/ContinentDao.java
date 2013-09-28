@@ -7,7 +7,7 @@ import android.content.Context;
 import com.mromer.windfinder.bean.Continent;
 import com.mromer.windfinder.bean.Country;
 import com.mromer.windfinder.bean.Region;
-import com.mromer.windfinder.utils.XmlParseUtil;
+import com.mromer.windfinder.utils.XmlToContinentParserUtil;
 
 public class ContinentDao {
 	
@@ -27,7 +27,7 @@ public class ContinentDao {
 	
 	
 	public void loadContinents() {
-		continents = new XmlParseUtil().getContinents(this.context);
+		continents = new XmlToContinentParserUtil().getContinents(this.context);
 	}
 
 

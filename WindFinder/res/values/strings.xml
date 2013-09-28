@@ -4,11 +4,22 @@
     <string name="app_name">WindFinder</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    
     <string name="select_continent">Select continent</string>
     <string name="select_country">Select country</string>
     <string name="select_region">Select region</string>
     <string name="select_station">Select station</string>
-    
+    <string name="air_temperature">Air temperature</string>
+    <string name="water_temperature">Water temperature</string>
+    <string name="wind_direction">Wind direction</string>
+    <string name="wind_speed">Wind speed</string>
+    <string name="wind_gusts">wind gusts</string>
+    <string name="weather">Weather</string>
+    <string name="clouds">Clouds</string>
+    <string name="precipitation">Precipitation</string>
+    <string name="precipitation_type">Precipitation type</string>
+    <string name="wave_height">Wave Height</string>
+    <string name="wave_direction">Wave direction</string>
+    <string name="wave_period">Wave period</string>
+    <string name="air_pressure">Air pressure</string>
 
 </resources>
