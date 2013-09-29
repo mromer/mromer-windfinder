@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 
 import com.mromer.windfinder.bean.Forecast;
 import com.mromer.windfinder.fragment.WindInfoSlidePageFragment;
@@ -22,20 +23,22 @@ public class WindInfoSlidePagerAdapter extends FragmentStatePagerAdapter {
 	public WindInfoSlidePagerAdapter(FragmentManager fm, 
 			List<Forecast> list) {
 
-		super(fm);           
+		super(fm);
+		
 		this.windCards = (ArrayList<Forecast>) list;
 
 	}
 
+	
 	@Override
 	public Fragment getItem(int position) {
 		
 		Forecast forecast = windCards.get(position);
-
+		
 		Fragment f = new WindInfoSlidePageFragment();
 		Bundle b = new Bundle();
 		b.putSerializable("FORECAST_INFO", forecast);		
-
+		
 		f.setArguments(b);					
 
 		return f;
@@ -45,5 +48,10 @@ public class WindInfoSlidePagerAdapter extends FragmentStatePagerAdapter {
 	public int getCount() {
 		return windCards.size();
 	}
+	
+	@Override
+    public int getItemPosition(Object object){
+        return PagerAdapter.POSITION_NONE;
+    }
 
 }

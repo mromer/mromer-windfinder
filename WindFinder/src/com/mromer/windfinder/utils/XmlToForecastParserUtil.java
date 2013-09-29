@@ -9,6 +9,7 @@ import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.util.Log;
 import android.util.Xml;
 
 import com.mromer.windfinder.bean.Forecast;
@@ -23,7 +24,7 @@ public class XmlToForecastParserUtil {
 
 
 	public Forecast getForecast(InputStream inputStream) {
-
+		
 		Forecast forecast = null;		
 
 		try {			

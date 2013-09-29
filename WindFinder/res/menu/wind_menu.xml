@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_add_Station"
+        android:icon="@drawable/content_new"
+        app:showAsAction="always"
+        android:title="@string/action_add_station"
+        android:visible="true"/>
+    
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/action_setting"
+        app:showAsAction="always"
+        android:title="@string/action_settings"
+        android:visible="true"/>
+    
+    <item
+        android:id="@+id/action_remove"
+        android:icon="@drawable/content_remove"
+        app:showAsAction="never"
+        android:title="@string/action_remove_station"
+        android:visible="true"/>
+
+</menu>

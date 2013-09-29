@@ -18,8 +18,7 @@ import com.mromer.windfinder.utils.StringUtils;
 public class WindInfoSlidePageFragment extends Fragment {
 
 	private Forecast forecast;
-
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
@@ -37,6 +36,7 @@ public class WindInfoSlidePageFragment extends Fragment {
 				R.layout.activity_country, container, false);		
 
 		TextView tv = (TextView) rootView.findViewById(R.id.stationName);
+		
 		tv.setText(forecast.getStationForecast().getName());
 
 

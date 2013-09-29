@@ -43,12 +43,12 @@ public class SharedPreferencesUtil {
 
 	}
 
-	public static void removeStationToSharedPreferences(Context context, Station station) {
+	public static void removeStationToSharedPreferences(Context context, String stationId) {
 
 		SharedPreferences prefs = context.getSharedPreferences(
 				"stations", Context.MODE_PRIVATE);
 
-		prefs.edit().remove(station.getId()).commit();
+		prefs.edit().remove(stationId).commit();
 	}
 
 }

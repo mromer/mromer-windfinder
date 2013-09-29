@@ -8,7 +8,9 @@ import java.util.List;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.mromer.windfinder.R;
 import com.mromer.windfinder.bean.Forecast;
 import com.mromer.windfinder.utils.GetForecastHttpUtil;
 import com.mromer.windfinder.utils.XmlToForecastParserUtil;
@@ -41,7 +43,7 @@ public class GetForecastTask {
 			super.onPreExecute();
 
 			progressDialog = ProgressDialog.show(context, null,
-					"cargando", true);
+					context.getResources().getString(R.string.loading_data), true);
 			
 		}
 
@@ -56,18 +58,30 @@ public class GetForecastTask {
 				List<Forecast> forecastList = new ArrayList<Forecast>();
 				
 				for (String station : stations) {
+					
+					Log.d("", "GetForecastTask station " + station);
+					
 					String xml = new GetForecastHttpUtil().getForecasts(station);
 					
 					if (xml != null) {
-						InputStream iStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
 						
-						XmlToForecastParserUtil xmlToForecastParserUtil = new XmlToForecastParserUtil();					
-						forecastList.add(xmlToForecastParserUtil.getForecast(iStream));
+						ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+						InputStream iStream = byteArrayInputStream;
 						
+						XmlToForecastParserUtil xmlToForecastParserUtil = new XmlToForecastParserUtil();	
+						Forecast forecast = xmlToForecastParserUtil.getForecast(iStream);
+						
+						byteArrayInputStream.close();
+						iStream.close();						
+						
+						if (forecast != null && forecast.getStationForecast() != null) {
+							
+							forecastList.add(forecast);
+						}
 						
 					} else {
 						result.setError(true);
-						result.setDesc("Error cargando datos");
+						result.setDesc(context.getResources().getString(R.string.error_loading_data));
 					}
 				}
 				
@@ -77,7 +91,7 @@ public class GetForecastTask {
 				e.printStackTrace();
 				
 				result.setError(true);
-				result.setDesc("Error cargando datos");
+				result.setDesc(context.getResources().getString(R.string.error_loading_data));
 			}
 			
 			
@@ -94,11 +108,6 @@ public class GetForecastTask {
 			} else {
 				forecastLoadTaskResult.taskFailure(result);
 			}
-			
-			
-
-			
-
 		}		
 		
 	}

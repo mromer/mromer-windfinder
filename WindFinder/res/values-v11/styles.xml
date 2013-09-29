@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme for API 11+. This theme completely replaces
@@ -6,6 +6,22 @@
     -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
         <!-- API 11 theme customizations can go here. -->
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+    
+     <!-- ActionBar styles -->
+    <style name="MyActionBar"
+           parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/background_grey_dark</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        
+    </style>
+    
+    <!-- ActionBar title text -->
+    <style name="MyActionBarTitleText"
+           parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/text_grey_dark</item>
+        <!-- The textColor property is backward compatible with the Support Library -->
     </style>
 
 </resources>

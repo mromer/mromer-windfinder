@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import com.mromer.windfinder.adapter.StationListAdapter;
 import com.mromer.windfinder.bean.Continent;
@@ -33,9 +32,7 @@ public class StationActivity extends SelectStationMainActivity {
 	private String countryId;
 	private String regionId;
 
-	private ArrayList<Continent> continentList;	
-
-	private ListView listView;
+	private ArrayList<Continent> continentList;		
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +122,7 @@ public class StationActivity extends SelectStationMainActivity {
 		if (stationId == null) {
 			SharedPreferencesUtil.addStationToSharedPreferences(this, station);
 		} else {
-			SharedPreferencesUtil.removeStationToSharedPreferences(this, station);
+			SharedPreferencesUtil.removeStationToSharedPreferences(this, station.getId());
 		}	
 
 		((BaseAdapter) adapterView.getAdapter()).notifyDataSetChanged();

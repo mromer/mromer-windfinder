@@ -27,8 +27,5 @@ public class Forecast implements Serializable{
 
 	public void setStationForecast(ForecastStation stationForecast) {
 		this.stationForecast = stationForecast;
-	}
-	
-
-	
+	}	
 }

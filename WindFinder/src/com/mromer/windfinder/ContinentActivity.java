@@ -61,7 +61,8 @@ public class ContinentActivity extends SelectStationMainActivity  {
 				@Override
 				public void taskFailure(TaskResult result) {
 
-					AlertUtils.showAlert(ContinentActivity.this, result.getDesc(), "aceptar");
+					AlertUtils.showAlert(ContinentActivity.this, result.getDesc(), 
+							getResources().getString(R.string.accept));
 
 				}
 			}).execute();			

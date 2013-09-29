@@ -1,6 +1,8 @@
 package com.mromer.windfinder.utils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;
@@ -17,7 +19,7 @@ public class GetForecastHttpUtil {
 
 
 
-	public String getForecasts(String stationId) {
+	public String getForecasts(String stationId) {		
 
 		HttpParams httpParameters = new BasicHttpParams();
 		// Set the timeout in milliseconds until a connection is established.
@@ -29,12 +31,13 @@ public class GetForecastHttpUtil {
 		int timeoutSocket = 10000;
 		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
+		InputStream in = null;
 
 		String endpoint = "http://www.windfinder.com/api/forecast?CUSTOMER=vista&FORMAT=XML&STATIONS=" + stationId;
 		//		String requestParameters = "latlng=" + latitud + "," + longitud + "&sensor=false";
 
 		String xml = null;
-
+		HttpClient httpClient = null;
 
 		// Send a GET request to the servlet
 		try	{
@@ -46,17 +49,15 @@ public class GetForecastHttpUtil {
 			//				}
 
 
-			HttpClient client = new DefaultHttpClient(httpParameters);
+			httpClient = new DefaultHttpClient(httpParameters);
 
 			Log.d("tag", "request url: " + urlStr);
 			HttpGet request = new HttpGet(urlStr);				
-			HttpResponse httpresponse = client.execute(request);
+			HttpResponse httpresponse = httpClient.execute(request);
 
+			in = httpresponse.getEntity().getContent();
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					httpresponse.getEntity().getContent(), "UTF-8"));
-
-
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
 			String sResponse;
 			StringBuilder s = new StringBuilder();
@@ -66,14 +67,33 @@ public class GetForecastHttpUtil {
 			}
 			xml = s.toString();
 
+			in.close();
+			httpClient.getConnectionManager().shutdown();
 
 		} catch (Exception e) {
-			Log.d("Error", "Error obteniendo datos del servidor direccion");
+
+			Log.d("Error", "Error getting data");
 			e.printStackTrace();
+
+		} finally {
+			closeResources(in, httpClient);
 		}
 
-
 		return xml;
+	}
+	
+	private void closeResources(InputStream in, HttpClient httpClient) {
+		try {
+			if (in != null) {
+				in.close();
+			} 
+			if (httpClient != null){
+				httpClient.getConnectionManager().shutdown();
+			}
+		} catch (IOException e) {
+			Log.d("Error", "Error closing resources");
+			e.printStackTrace();
+		}
 	}
 
 

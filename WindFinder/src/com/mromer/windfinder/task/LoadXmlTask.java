@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.mromer.windfinder.R;
 import com.mromer.windfinder.manager.ContinentManager;
 
 
@@ -32,7 +33,7 @@ public class LoadXmlTask {
 			super.onPreExecute();
 
 			progressDialog = ProgressDialog.show(context, null,
-					"cargando", true);
+					context.getResources().getString(R.string.loading_data), true);
 			
 		}
 
@@ -50,14 +51,14 @@ public class LoadXmlTask {
 					result.setError(false);					
 				} else {
 					result.setError(true);
-					result.setDesc("Error cargando datos");
+					result.setDesc(context.getResources().getString(R.string.error_loading_data));
 				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 				
 				result.setError(true);
-				result.setDesc("Error cargando datos");
+				result.setDesc(context.getResources().getString(R.string.error_loading_data));
 			}
 			
 			

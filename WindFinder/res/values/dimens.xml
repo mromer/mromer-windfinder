@@ -5,7 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     
     <dimen name="char_column_width">55dp</dimen>
-    <dimen name="char_column_margin">1dp</dimen>
+    <dimen name="char_column_margin">3dp</dimen>
     
     
     
