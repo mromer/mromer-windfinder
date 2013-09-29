@@ -3,6 +3,8 @@ package com.mromer.windfinder.utils;
 import java.text.DecimalFormat;
 
 public class StringUtils {
+	
+	private final static String TIMEZONE_UTC = "UTC";
 
 	public static String toTime(String time) {
 
@@ -19,6 +21,16 @@ public class StringUtils {
 		String day = date.substring(6, 8);
 
 		return year + "/" + month + "/" + day;
+	}
+	
+	public static String toTimezone(String timezone) {
+		
+		if (Integer.parseInt(timezone) <= 0) {
+			return TIMEZONE_UTC + " " + timezone;
+		} else {
+			return TIMEZONE_UTC + " +" + timezone;
+		}
+
 	}
 	
 	

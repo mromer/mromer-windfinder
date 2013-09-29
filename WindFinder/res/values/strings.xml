@@ -29,5 +29,23 @@
     <string name="wave_direction">Wave direction</string>
     <string name="wave_period">Wave period</string>
     <string name="air_pressure">Air pressure</string>
+    
+    <string-array   name="wind_direction_values">
+        <item>E</item>
+        <item>ENE</item>
+        <item>ESE</item>
+        <item>N</item>
+        <item>NE</item>
+        <item>NNE</item>
+        <item>NNW</item>
+        <item>NW</item>
+        <item>S</item>
+        <item>SE</item>
+        <item>SSE</item>
+        <item>SSW</item>
+        <item>SW</item>
+        <item>W</item>
+        <item>WNW</item>        
+    </string-array>
 
 </resources>

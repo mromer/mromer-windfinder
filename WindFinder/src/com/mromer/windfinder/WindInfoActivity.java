@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.mromer.windfinder.adapter.WindInfoSlidePagerAdapter;
 import com.mromer.windfinder.bean.Forecast;
@@ -116,7 +118,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 		case R.id.action_settings:
 
-			ActivityUtil.toNextActivity(this, ContinentActivity.class);
+			ActivityUtil.toNextActivity(this, PreferenceWithHeaders.class);
 
 			return true;
 
@@ -207,6 +209,21 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 		return result;
 
+	}
+	
+	public void doMoreInfo(View v) {
+		
+		String dateTag = (String) v.getTag();
+		
+		Forecast forecast = forecastTaskResult.getForecastList().get(mPager.getCurrentItem());
+	   
+		Intent intent = new Intent(this, MoreInfoActivity.class);
+		
+		intent.putExtra(MoreInfoActivity.BUNDLE_FORECAST_INFO, forecast);
+		intent.putExtra(MoreInfoActivity.BUNDLE_FORECAST_INFO_DATE, dateTag);
+
+		startActivity(intent);		
+		
 	}
 
 

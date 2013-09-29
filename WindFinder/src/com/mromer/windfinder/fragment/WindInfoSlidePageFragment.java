@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,7 +60,7 @@ public class WindInfoSlidePageFragment extends Fragment {
 				// Add row date
 				addDataDate(chart, forecastItem, inflater);
 
-				addDataInfo(chart, inflater);
+				addDataInfo(chart, inflater, forecast.getStationForecast().getTimezone());
 			}
 
 			addDataForecast(chart, forecastItem, inflater);					
@@ -135,16 +136,22 @@ public class WindInfoSlidePageFragment extends Fragment {
 
 		TextView tvDate = (TextView) column.findViewById(R.id.date);
 		tvDate.setText(StringUtils.toDate(forecastItem.getDate()));		
-
+		
+		ImageButton moreInfoButton = (ImageButton) column.findViewById(R.id.moreInfo);
+		moreInfoButton.setTag(forecastItem.getDate());
+		
 		parentView.addView(column);
 	}
 
-	private void addDataInfo(LinearLayout parentView, LayoutInflater inflater) {
+	private void addDataInfo(LinearLayout parentView, LayoutInflater inflater, String timezone) {
 
 		LinearLayout column = (LinearLayout) inflater.inflate(
 				R.layout.wind_info_chart_column_names2, parentView, false);
 
-
+		
+		TextView tvTimezone = (TextView) column.findViewById(R.id.timezone);
+		tvTimezone.setText(StringUtils.toTimezone(timezone));	
+		
 		parentView.addView(column);
 	}
 

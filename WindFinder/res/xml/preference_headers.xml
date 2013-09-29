@@ -1,0 +1,19 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Notifications" >
+        <CheckBoxPreference
+            android:key="notification_actived"
+            android:title="Get notifications" />
+        <CheckBoxPreference
+            android:key="minimun_wind_level"
+            android:title=" Minimum wind level" />
+
+        <ListPreference
+            android:dialogTitle="Select Wind direction"
+            android:entries="@array/wind_direction_values"
+            android:entryValues="@array/wind_direction_values"
+            android:key="wind_direction"
+            android:title="Wind direction" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
