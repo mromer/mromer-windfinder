@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -18,6 +22,7 @@ import android.view.View;
 
 import com.mromer.windfinder.adapter.WindInfoSlidePagerAdapter;
 import com.mromer.windfinder.bean.Forecast;
+import com.mromer.windfinder.manager.ContinentManager;
 import com.mromer.windfinder.task.ForecastLoadTaskResultI;
 import com.mromer.windfinder.task.ForecastTaskResult;
 import com.mromer.windfinder.task.GetForecastTask;
@@ -29,7 +34,10 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 	private final String TAG = this.getClass().getName();
 
+	private final int RESULT_SETTINGS = 1;
+
 	private ActionBar actionBar;
+
 
 	/**
 	 * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -41,7 +49,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 	 * The pager adapter, which provides the pages to the view pager widget.
 	 */
 	private PagerAdapter mPagerAdapter;
-	
+
 
 	private ForecastTaskResult forecastTaskResult;
 
@@ -52,11 +60,14 @@ public class WindInfoActivity extends ActionBarActivity  {
 		Log.d(TAG, "onCreate " + TAG);
 
 		super.onCreate(savedInstanceState);	
+		
+		ContinentManager.resetInstance();
 
-		setContentView(R.layout.wind_info);
-
-		setActionBar(R.string.app_name);
-
+		setContentView(R.layout.wind_info);		
+		
+		IncomingAlarm.cancelNotification(this);
+		
+		addToPushNotifications();
 
 		Map<String, String> stationsSelected = SharedPreferencesUtil.getStationsSelected(this);
 
@@ -80,6 +91,8 @@ public class WindInfoActivity extends ActionBarActivity  {
 				forecastTaskResult = result;
 
 				createViewPager(forecastTaskResult);
+				
+				setActionBar(R.string.app_name);
 
 			}
 
@@ -88,7 +101,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 				AlertUtils.showAlert(WindInfoActivity.this, result.getDesc(), 
 						getResources().getString(R.string.accept));				
 			}
-		}, stations).execute();
+		}, stations, true).execute();
 
 	}
 
@@ -96,9 +109,11 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 		actionBar = getSupportActionBar();	
 
-		actionBar.setTitle(getResources().getString(idTittle));		
+		actionBar.setTitle(getResources().getString(idTittle));	
+		
 
 	}
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -118,7 +133,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 		case R.id.action_settings:
 
-			ActivityUtil.toNextActivity(this, PreferenceWithHeaders.class);
+			preferencesAction();			
 
 			return true;
 
@@ -135,6 +150,16 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 
 	private void removeAction() {
+		
+		if (forecastTaskResult == null || forecastTaskResult.getForecastList() == null
+				|| forecastTaskResult.getForecastList().size() == 0) {
+			
+			AlertUtils.showAlert(this, "Add a station", "Accept");
+			
+			return;
+		}
+		
+		
 		final Forecast forecast = forecastTaskResult.getForecastList().get(mPager.getCurrentItem());
 
 		DialogInterface.OnClickListener positiveAction = new DialogInterface.OnClickListener() {
@@ -143,9 +168,9 @@ public class WindInfoActivity extends ActionBarActivity  {
 			public void onClick(DialogInterface dialog, int which) {
 				forecastTaskResult = removeStation(forecast.getStationForecast().getId(),
 						forecastTaskResult);
-				
+
 				SharedPreferencesUtil.removeStationToSharedPreferences(WindInfoActivity.this, forecast.getStationForecast().getId());
-				
+
 				mPagerAdapter = new WindInfoSlidePagerAdapter(getSupportFragmentManager(), 
 						forecastTaskResult.getForecastList());	
 
@@ -173,8 +198,9 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		getMenuInflater().inflate(R.menu.wind_menu, menu);
+		
+		getMenuInflater().inflate(R.menu.wind_menu, menu);		
+		
 		return true;
 	}
 
@@ -210,21 +236,53 @@ public class WindInfoActivity extends ActionBarActivity  {
 		return result;
 
 	}
-	
+
 	public void doMoreInfo(View v) {
-		
+
 		String dateTag = (String) v.getTag();
-		
+
 		Forecast forecast = forecastTaskResult.getForecastList().get(mPager.getCurrentItem());
-	   
+
 		Intent intent = new Intent(this, MoreInfoActivity.class);
-		
+
 		intent.putExtra(MoreInfoActivity.BUNDLE_FORECAST_INFO, forecast);
 		intent.putExtra(MoreInfoActivity.BUNDLE_FORECAST_INFO_DATE, dateTag);
 
 		startActivity(intent);		
+
+	}
+
+	public void preferencesAction() {	
+
+		if (forecastTaskResult == null || forecastTaskResult.getForecastList() == null
+				|| forecastTaskResult.getForecastList().size() == 0) {
+			
+			AlertUtils.showAlert(this, "Add a station", "Accept");
+			
+			return;
+		}
 		
+		Forecast forecast = forecastTaskResult.getForecastList().get(mPager.getCurrentItem());
+
+		Intent intent = new Intent(this, PreferenceWithHeaders.class);
+
+		String stationId = forecast.getStationForecast().getId();
+		String stationName = forecast.getStationForecast().getName();
+
+		intent.putExtra(PreferenceWithHeaders.BUNDLE_PREFERENCE_NAME, stationId);
+		intent.putExtra(PreferenceWithHeaders.BUNDLE_STATION_NAME, stationName);
+
+		startActivityForResult(intent, RESULT_SETTINGS);	
+
 	}
 
 
+	private void addToPushNotifications() {
+
+		PendingIntent  pi = PendingIntent.getBroadcast( this, 0, new Intent("com.mromer.windfinder"), 0);
+		AlarmManager am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
+		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
+				10000, 10000, pi);
+
+	}
 }

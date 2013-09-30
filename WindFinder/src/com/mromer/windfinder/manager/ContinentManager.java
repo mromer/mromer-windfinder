@@ -36,6 +36,10 @@ public class ContinentManager {
         createInstance(context);
         return INSTANCE;
     }
+    
+    public static void resetInstance() {       
+        INSTANCE = null;
+    }
 	
 	
 	public ArrayList<Continent> getAllContinents() {		

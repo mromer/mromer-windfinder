@@ -11,6 +11,7 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
+        
 
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/MyActionBar</item>       
@@ -30,7 +31,8 @@
         <item name="android:background">@color/background_grey_dark</item>
 
         <!-- Support library compatibility -->
-        <item name="background">@color/background_grey_dark</item>
+        <item name="background">@color/background_grey_dark</item>        
+        <item name="titleTextStyle">@color/text_grey_dark</item>
     </style>
 
     <!-- Application theme. -->

@@ -10,11 +10,19 @@ public class ForecastItem implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	
+	public static final String WIND_SPEED 		= "wind_speed";
+	public static final String WIND_DIRECTION 	= "wind_direction";
+	
+	
+	
 	private String date;
 	
 	private String time;
 	
 	private HashMap<String, ForecastData> forecastDataMap;
+	
+	
 	
 			
 	public HashMap<String, ForecastData> getForecastDataMap() {

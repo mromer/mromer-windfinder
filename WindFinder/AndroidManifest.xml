@@ -31,6 +31,13 @@
         <activity android:name="com.mromer.windfinder.StationActivity" />
         <activity android:name="com.mromer.windfinder.MoreInfoActivity" />
         <activity android:name="com.mromer.windfinder.PreferenceWithHeaders" />
+        
+        <receiver android:name="com.mromer.windfinder.IncomingAlarm">   
+                    <intent-filter>
+                    <action android:name="com.mromer.windfinder" />
+                    </intent-filter>
+        </receiver>
+        
     </application>
 
 </manifest>

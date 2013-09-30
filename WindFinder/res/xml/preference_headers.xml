@@ -4,9 +4,11 @@
         <CheckBoxPreference
             android:key="notification_actived"
             android:title="Get notifications" />
-        <CheckBoxPreference
+
+        <EditTextPreference
+            android:dialogTitle="Set minimum wind level"
             android:key="minimun_wind_level"
-            android:title=" Minimum wind level" />
+            android:title="Minimum wind level" />
 
         <ListPreference
             android:dialogTitle="Select Wind direction"

@@ -180,17 +180,10 @@ public class XmlToContinentParserUtil {
 			
 			parser.require(XmlPullParser.START_TAG, ns, "station");
 			
-			Station station = new Station();
+			Station station = new Station();			
 			
-			station.setForecast(parser.getAttributeValue(null, "forecast"));
-			station.setId(parser.getAttributeValue(null, "id"));
-			station.setKeyword(parser.getAttributeValue(null, "keyword"));
-			station.setName(parser.getAttributeValue(null, "name"));
-			station.setReport(parser.getAttributeValue(null, "report"));
-			station.setStatistic(parser.getAttributeValue(null, "statistic"));
-			station.setSuperforecast(parser.getAttributeValue(null, "superforecast"));
-			station.setWaveforecast(parser.getAttributeValue(null, "waveforecast"));
-			station.setWavereport(parser.getAttributeValue(null, "wavereport"));	
+			station.setId(parser.getAttributeValue(null, "id"));			
+			station.setName(parser.getAttributeValue(null, "name"));		
 			
 			parser.nextTag();
 			
