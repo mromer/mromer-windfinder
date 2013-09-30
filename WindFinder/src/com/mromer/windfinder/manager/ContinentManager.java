@@ -37,8 +37,12 @@ public class ContinentManager {
         return INSTANCE;
     }
     
-    public static void resetInstance() {       
-        INSTANCE = null;
+    public static void resetInstance() { 
+    	if (INSTANCE != null) {
+    		INSTANCE.context = null;
+    	}
+    	
+        INSTANCE = null;        
     }
 	
 	

@@ -22,7 +22,6 @@ import android.view.View;
 
 import com.mromer.windfinder.adapter.WindInfoSlidePagerAdapter;
 import com.mromer.windfinder.bean.Forecast;
-import com.mromer.windfinder.manager.ContinentManager;
 import com.mromer.windfinder.task.ForecastLoadTaskResultI;
 import com.mromer.windfinder.task.ForecastTaskResult;
 import com.mromer.windfinder.task.GetForecastTask;
@@ -59,9 +58,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 		Log.d(TAG, "onCreate " + TAG);
 
-		super.onCreate(savedInstanceState);	
-		
-		ContinentManager.resetInstance();
+		super.onCreate(savedInstanceState);			
 
 		setContentView(R.layout.wind_info);		
 		
@@ -128,7 +125,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 		case R.id.action_add_Station:
 
 			ActivityUtil.toNextActivity(this, ContinentActivity.class);
-
+			
 			return true;
 
 		case R.id.action_settings:

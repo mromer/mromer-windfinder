@@ -149,7 +149,14 @@ public class IncomingAlarm extends BroadcastReceiver {
 		
 		Map<String, ?> stationPreferences = SharedPreferencesUtil.getStationPreferences(context, stationId);
 		String windDirection = (String) stationPreferences.get(SharedPreferencesUtil.SHARED_WIND_DIRECTION);
-		Integer windLevel = Integer.parseInt((String) stationPreferences.get(SharedPreferencesUtil.SHARED_WIND_LEVEL));
+		
+		
+		Integer windLevel = 0;		
+		String windLevelString = (String) stationPreferences.get(SharedPreferencesUtil.SHARED_WIND_LEVEL);
+		if (windLevelString != null ) {
+			windLevel = Integer.parseInt((String) stationPreferences.get(SharedPreferencesUtil.SHARED_WIND_LEVEL));
+		}
+		
 		
 		for (Forecast forecast : forecastTaskResult.getForecastList()) {
 			if (stationId.equals(forecast.getStationForecast().getId())) {
