@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -21,25 +23,181 @@ import com.mromer.windfinder.task.ForecastTaskResult;
 import com.mromer.windfinder.task.GetForecastTask;
 import com.mromer.windfinder.utils.SharedPreferencesUtil;
 
+/**
+ * Manage the alarm manager.
+ * Manage the alarm manager events and throw notifications.
+ * */
 public class IncomingAlarm extends BroadcastReceiver {
 
+	private final String TAG = this.getClass().getName();
+
 	private Context context;
-	private final static int NOTIFICATION_ID = 1;	
+	private final static int NOTIFICATION_ID = 1;
+
+	/** Repetition time in milis. */
+	private static final long ALARM_MANAGER_REPETITION_TIME = 10000;
 	
+	private static final String PACKAGE_NAME = "com.mromer.windfinder";
+
+	@Override
 	public void onReceive(Context context, Intent intent) {
 
 		this.context = context;
 
-		// Phone call state change then this method will automaticaly called
-		//		Toast.makeText(context, "prueba", Toast.LENGTH_SHORT).show();
 		processNotification();
 	}
 
+	private void processNotification() {
+
+		Map<String, String> stations = SharedPreferencesUtil.getStationsSelected(context);
+
+		// Get the stations with notification actived.
+		List<String> stationsWithNotificationEnabled = stationsWithNotificationEnabled(stations);
+
+		// Is notification set in preferences?
+		if (stationsWithNotificationEnabled.size() > 0) {
+			sendNotificationMenssagesTask(stationsWithNotificationEnabled);
+		}
+	}
+
+
+	private void sendNotificationMenssagesTask(final List<String> stationsWithNotification) {
+
+		// Run the GetForecastTask
+		new GetForecastTask(context, new ForecastLoadTaskResultI() {
+
+			@Override
+			public void taskSuccess(ForecastTaskResult result) {
+
+				sendNotificationMenssagesTaskSuccess(result, stationsWithNotification);
+			}
+
+			@Override
+			public void taskFailure(ForecastTaskResult result) {
+				Log.e(TAG, result.getDesc());
+
+			}
+		}, stationsWithNotification, false).execute();
+	}
+
+
+	private void sendNotificationMenssagesTaskSuccess(ForecastTaskResult result,
+			List<String> stationsWithNotification) {
+
+		List<String> notificationMenssages = new ArrayList<String>();
+
+		// Compare data preferences
+		// Get the messages to notifications
+		for (String stationId : stationsWithNotification) {
+			String message = compareDataPreferences(stationId, result);
+			if (message != null){
+				notificationMenssages.add(message);
+			}
+		}
+
+		if (notificationMenssages.size() > 0) {
+			sendNotificacion(notificationMenssages.toString());
+		}
+
+	}
+
+
+	private String compareDataPreferences(String stationId, ForecastTaskResult forecastTaskResult) {
+
+		String messageResult = null;
+
+		String windDirection = SharedPreferencesUtil.getWindDirectionStation(context, stationId);
+		Integer windLevel = SharedPreferencesUtil.getWindLevelStation(context, stationId);
+		
+		for (Forecast forecast : forecastTaskResult.getForecastList()) {
+			if (stationId.equals(forecast.getStationForecast().getId())) {
+
+				messageResult = getMessageWithCondition(forecast, windDirection, windLevel);				
+
+				// Only get the first station
+				if (messageResult != null) {
+					break;
+				}
+			}			
+		}
+
+		return messageResult;
+	}
+
+
+	/**
+	 * Return the message for the notification if check the conditions.
+	 * 
+	 * */
+	private String getMessageWithCondition(Forecast forecast, String windDirection, Integer windLevel) {
+
+		String messageResult = null;
+
+		for (ForecastItem forecastItem : forecast.getStationForecast().getForecastItems()) {
+
+			Integer windLevelCandidate = forecastItem.getWindSpeed();
+
+			String windDirectionCandidate = forecastItem.getWindDirection();					
+
+			if (windLevel <= windLevelCandidate ||
+					windDirection.equals(windDirectionCandidate)) {
+				// Only get the first station
+				messageResult = context.getResources().getString(R.string.wind_info_push) 
+						+ " " + forecast.getStationForecast().getName();
+				break;
+			}
+		}
+
+		return messageResult;
+	}	
+
+	
+	
+	private List<String> stationsWithNotificationEnabled(Map<String, String> stations) {
+
+		List<String> stationsWithNotification = new ArrayList<String>();
+
+		for (Entry<String, String> entry : stations.entrySet()) {
+
+			String stationId = entry.getKey();
+
+			// Is set notifications?
+			if (SharedPreferencesUtil.isNotificacionEnabled(context, stationId)){
+				stationsWithNotification.add(stationId);
+			}
+		}
+
+		return stationsWithNotification;
+	}
+	
+
+	/**
+	 * Remove the notification in bar
+	 * */
+	public static void cancelNotification(Context ctx) {
+		String ns = Context.NOTIFICATION_SERVICE;
+		
+		NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
+		
+		nMgr.cancel(NOTIFICATION_ID);
+	}
+
+
+	public static void startAlarmManager(Context context) {
+
+		PendingIntent  pi = PendingIntent.getBroadcast( context, 0, new Intent(PACKAGE_NAME), 0);
+		
+		AlarmManager am = (AlarmManager)(context.getSystemService( Context.ALARM_SERVICE ));
+		
+		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
+				ALARM_MANAGER_REPETITION_TIME, ALARM_MANAGER_REPETITION_TIME, pi);
+	}
+	
 
 	private void sendNotificacion(String tittle) {
-		
+
 		Log.d("", "Sending notification " + tittle);
-		
+
 		NotificationCompat.Builder mBuilder =
 				new NotificationCompat.Builder(context)
 		.setSmallIcon(R.drawable.wind_icon_orange)
@@ -58,9 +216,12 @@ public class IncomingAlarm extends BroadcastReceiver {
 		stackBuilder.addParentStack(WindInfoActivity.class);
 		// Adds the Intent that starts the Activity to the top of the stack
 		stackBuilder.addNextIntent(resultIntent);
+		
 		PendingIntent resultPendingIntent =
 				stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		
 		mBuilder.setContentIntent(resultPendingIntent);
+		
 		NotificationManager mNotificationManager =
 				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
@@ -68,165 +229,4 @@ public class IncomingAlarm extends BroadcastReceiver {
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());		
 
 	}
-
-
-	private void processNotification() {
-
-
-		Map<String, String> stations = SharedPreferencesUtil.getStationsSelected(context);
-
-		Log.d("", "stations " + stations);
-		
-		
-		// Is notification set in preferences?
-		List<String> stationsWithNotification = stationsWithNotification(stations);
-		
-		Log.d("", "stationsWithNotification " + stationsWithNotification);
-
-		
-		sendNotificationMenssagesTask(stationsWithNotification);
-		
-
-	}
-
-
-	private void sendNotificationMenssagesTask(final List<String> stationsWithNotification) {
-
-		 
-		// Compare and add notification to the list
-		if (stationsWithNotification.size() > 0) {
-			// Get data
-			new GetForecastTask(context, new ForecastLoadTaskResultI() {
-				
-				@Override
-				public void taskSuccess(ForecastTaskResult result) {
-					
-					Log.d("", "sendNotificationMenssagesTaskSuccess ");
-					
-					sendNotificationMenssagesTaskSuccess(result, stationsWithNotification);
-					
-				}
-				
-				@Override
-				public void taskFailure(ForecastTaskResult result) {
-					// TODO Auto-generated method stub
-					
-				}
-			}, stationsWithNotification, false).execute();			
-
-						
-		}
-		
-	}
-	
-	
-	private void sendNotificationMenssagesTaskSuccess(ForecastTaskResult result,
-			List<String> stationsWithNotification) {
-		
-		Log.d("", "sendNotificationMenssagesTaskSuccess ");
-		Log.d("", "stationsWithNotification " + stationsWithNotification);
-		
-		List<String> notificationMenssages = new ArrayList<String>();
-		
-		// Compare data
-		for (String stationId : stationsWithNotification) {
-			String message = compareData(stationId, result);
-			if (message != null){
-				notificationMenssages.add(message);
-			}
-		}
-		
-		if (notificationMenssages.size() > 0) {
-			sendNotificacion(notificationMenssages.toString());
-		}
-		
-	}
-
-
-	private String compareData(String stationId, ForecastTaskResult forecastTaskResult) {
-		
-		String messageRetult = null;
-		
-		Map<String, ?> stationPreferences = SharedPreferencesUtil.getStationPreferences(context, stationId);
-		String windDirection = (String) stationPreferences.get(SharedPreferencesUtil.SHARED_WIND_DIRECTION);
-		
-		
-		Integer windLevel = 0;		
-		String windLevelString = (String) stationPreferences.get(SharedPreferencesUtil.SHARED_WIND_LEVEL);
-		if (windLevelString != null ) {
-			windLevel = Integer.parseInt((String) stationPreferences.get(SharedPreferencesUtil.SHARED_WIND_LEVEL));
-		}
-		
-		
-		for (Forecast forecast : forecastTaskResult.getForecastList()) {
-			if (stationId.equals(forecast.getStationForecast().getId())) {
-				
-				for (ForecastItem forecastItem : forecast.getStationForecast().getForecastItems()) {
-					
-					Integer windLevelCandidate =
-							Integer.parseInt(forecastItem.getForecastDataMap()
-									.get(ForecastItem.WIND_SPEED).getValue());
-					
-					String windDirectionCandidate = forecastItem.getForecastDataMap()
-							.get(ForecastItem.WIND_DIRECTION).getValue();					
-					
-					if (windLevel <= windLevelCandidate ||
-							windDirection.equals(windDirectionCandidate)) {
-						
-						messageRetult = context.getResources().getString(R.string.wind_info_push) 
-								+ " " + forecast.getStationForecast().getName();
-						break;
-					}
-				}
-				
-			}			
-		}
-		
-		return messageRetult;
-	}
-
-
-	private List<String> stationsWithNotification(Map<String, String> stations) {
-
-		List<String> stationsWithNotification = new ArrayList<String>();
-
-		for (Entry<String, String> entry : stations.entrySet()) {
-
-			String stationId = entry.getKey();
-
-			// Is set notifications?
-			if (isSetNotificacions(stationId)){
-				stationsWithNotification.add(stationId);
-			}		
-
-		}
-
-		return stationsWithNotification;
-	}
-
-	private boolean isSetNotificacions(String idStation) {
-		
-		boolean result = false;
-
-		Map<String, ?> stationPreferences = SharedPreferencesUtil.getStationPreferences(context, idStation);
-
-		if (stationPreferences != null &&
-				stationPreferences.get(SharedPreferencesUtil.PROPERTY_NOTIFICATION_ACTIVED) != null) {
-			result = (Boolean) stationPreferences.get(SharedPreferencesUtil.PROPERTY_NOTIFICATION_ACTIVED);
-		}
-				
-
-		return result;
-	}
-
-
-
-
-	public static void cancelNotification(Context ctx) {
-	    String ns = Context.NOTIFICATION_SERVICE;
-	    NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
-	    nMgr.cancel(NOTIFICATION_ID);
-	}
-
-
 }
