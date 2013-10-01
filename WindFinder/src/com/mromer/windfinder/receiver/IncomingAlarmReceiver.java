@@ -20,6 +20,7 @@ import com.mromer.windfinder.R;
 import com.mromer.windfinder.WindInfoActivity;
 import com.mromer.windfinder.bean.Forecast;
 import com.mromer.windfinder.bean.ForecastItem;
+import com.mromer.windfinder.commons.ConstantsMain;
 import com.mromer.windfinder.task.ForecastLoadTaskResultI;
 import com.mromer.windfinder.task.ForecastTaskResult;
 import com.mromer.windfinder.task.GetForecastTask;
@@ -35,9 +36,6 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 
 	private Context context;
 	private final static int NOTIFICATION_ID = 1;
-
-	/** Repetition time in milis. */
-	private static final long ALARM_MANAGER_REPETITION_TIME = 10000;
 	
 	private static final String PACKAGE_NAME = "com.mromer.windfinder";
 
@@ -192,7 +190,8 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 		AlarmManager am = (AlarmManager)(context.getSystemService( Context.ALARM_SERVICE ));
 		
 		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
-				ALARM_MANAGER_REPETITION_TIME, ALARM_MANAGER_REPETITION_TIME, pi);
+				ConstantsMain.ALARM_MANAGER_REPETITION_TIME, 
+				ConstantsMain.ALARM_MANAGER_REPETITION_TIME, pi);
 	}
 	
 

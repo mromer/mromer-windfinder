@@ -58,20 +58,15 @@ public class StationListAdapter extends BaseAdapter implements OnClickListener{
 		}
 		
 		TextView name = (TextView) convertView.findViewById(R.id.name);
-		name.setText(station.getName());  
-		
+		//due to italic text style				
+		name.setText(station.getName() + " ");  		
 		
 		if (stationsSelected.get(station.getId()) != null) {
-			// It is selected
-			
-			convertView.setBackgroundColor(context.getResources().getColor(R.color.orange_light));
-			
-			
-		} else {
-			
+			// It is selected			
+			convertView.setBackgroundColor(context.getResources().getColor(R.color.orange_light));			
+		} else {			
 			convertView.setBackgroundResource(android.R.drawable.list_selector_background);
-		}
-		
+		}		
 		
 		return convertView;
 	}

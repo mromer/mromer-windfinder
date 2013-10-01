@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.mromer.windfinder.adapter.WindInfoSlidePagerAdapter;
 import com.mromer.windfinder.bean.Forecast;
@@ -54,9 +55,6 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 	private ForecastTaskResult forecastTaskResult;
 	
-	/** List of stations stored in SharedPreferences.*/
-	private List<String> stations;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +65,16 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 		setContentView(R.layout.wind_info);	
 
-		manageNotification();		
+		manageNotification();
 
-		stations = getListStationsSelected();
+		// Get the forecast (http) and draw the viewpager
+		processGetForecastTask(getListStationsSelected());
 	}
 
 
-	@Override
-	protected void onResume() {
-
-		super.onResume();
-
+	protected void refreshAction() {
 		// Get the forecast (http) and draw the viewpager
-		processGetForecastTask(stations);
+		processGetForecastTask(getListStationsSelected());
 
 	};
 
@@ -140,7 +135,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 		
 		forecastTaskResult = result;
 
-		createViewPager(forecastTaskResult);
+		setAdapter();		
 		
 		setActionBar(R.string.app_name);
 	}
@@ -181,6 +176,12 @@ public class WindInfoActivity extends ActionBarActivity  {
 			removeStationActionProcess();
 
 			return true;
+			
+		case R.id.action_refresh:
+
+			refreshAction();
+
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -207,7 +208,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 		if (forecastTaskResult == null || forecastTaskResult.getForecastList() == null
 				|| forecastTaskResult.getForecastList().size() == 0) {
 
-			String alertTitle = getResources().getString(R.string.action_add_station);
+			String alertTitle = getResources().getString(R.string.add_station_info);
 			String textButton = getResources().getString(R.string.accept);
 			
 			AlertUtils.showAlert(this, alertTitle, textButton);
@@ -275,14 +276,41 @@ public class WindInfoActivity extends ActionBarActivity  {
 				forecastTaskResult);
 
 		// Remove from SharedPreferences
-		SharedPreferencesUtil.removeStationToSharedPreferences(WindInfoActivity.this, forecast.getStationForecast().getId());
+		SharedPreferencesUtil.removeStationToSharedPreferences(WindInfoActivity.this,
+				forecast.getStationForecast().getId());
+		
+		setAdapter();
+	}
 
+
+	private void setAdapter() {
+		
+		mPager = (ViewPager) findViewById(R.id.pager);	
+		
 		mPagerAdapter = new WindInfoSlidePagerAdapter(getSupportFragmentManager(), 
 				forecastTaskResult.getForecastList());	
 
 		mPager.setAdapter(mPagerAdapter);
 
 		mPagerAdapter.notifyDataSetChanged();
+		
+		showInfo();
+	}
+
+
+	/**
+	 * If there aren´t forecasts, show info.
+	 * */
+	private void showInfo() {
+		TextView tvInfo = (TextView) findViewById(R.id.info);
+		
+		if (forecastTaskResult.getForecastList() == null 
+				|| forecastTaskResult.getForecastList().size() == 0) {
+			
+			tvInfo.setVisibility(TextView.VISIBLE);
+		} else {
+			tvInfo.setVisibility(TextView.GONE);
+		}
 	}
 
 
@@ -293,22 +321,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 		return true;
 	}
-
-
-	private void createViewPager(ForecastTaskResult forecastTaskResult) {
-
-
-		mPager = (ViewPager) findViewById(R.id.pager);	
-		mPager.setOffscreenPageLimit(0);
-
-		mPagerAdapter = new WindInfoSlidePagerAdapter(getSupportFragmentManager(), 
-				forecastTaskResult.getForecastList());	
-
-		mPager.setAdapter(mPagerAdapter);
-
-		mPagerAdapter.notifyDataSetChanged();		
-	}
-
+	
 
 	/**
 	 * Remove a station in <code>forecastTaskResult</code>.
@@ -364,7 +377,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 		if (forecastTaskResult == null || forecastTaskResult.getForecastList() == null
 				|| forecastTaskResult.getForecastList().size() == 0) {
 
-			String alertTitle = getResources().getString(R.string.action_add_station);
+			String alertTitle = getResources().getString(R.string.add_station_info);
 			String textButton = getResources().getString(R.string.accept);
 			
 			AlertUtils.showAlert(this, alertTitle, textButton);

@@ -1,13 +1,13 @@
 package com.mromer.windfinder.bean;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+public class Continent  {
 
-public class Continent implements Parcelable {
-	
+	public static final String TAG_CONTINENT = "continent";
+	public static final String TAG_CONTINENT_NAME = "name";
+	public static final String TAG_CONTINENT_ID = "id";
+
 	private String id;
 	private String name;
 	private List<Country> countryList;
@@ -17,41 +17,7 @@ public class Continent implements Parcelable {
 		this.name = name;		
 		this.countryList = countryList;
 	}
-	
-	private Continent(Parcel in) {
-		id = in.readString();
-		name = in.readString();
-		
-		countryList = new ArrayList<Country>();
-		in.readList(countryList, Country.class.getClassLoader());
-					
-	}	
-	
-	
-	public static final Parcelable.Creator<Continent> CREATOR = new Parcelable.Creator<Continent>() {
-		public Continent createFromParcel(Parcel in) {
-			return new Continent(in);
-		}
 
-		public Continent[] newArray(int size) {
-			return new Continent[size];
-		}
-	};
-
-
-	@Override
-	public int describeContents() {
-		
-		return 0;
-	}
-
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(id);
-		dest.writeString(name);		
-		dest.writeList(countryList);
-	}
 
 	public String getId() {
 		return id;
@@ -76,19 +42,13 @@ public class Continent implements Parcelable {
 	public void setCountryList(List<Country> countryList) {
 		this.countryList = countryList;
 	}	
-	
+
 
 	@Override 
 	public String toString() {
-		StringBuilder result = new StringBuilder();	    
-
-		result.append("{id: " + getId());
-		result.append(", name: " + getName());
-		result.append(", countryList: [" + getCountryList() + "]");	   
-		result.append("}");
-
-		return result.toString();
+		//due to italic text style
+		return getName() + " ";		
 	}	
-	
-	
+
+
 }

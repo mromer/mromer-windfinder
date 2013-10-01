@@ -13,12 +13,18 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import com.mromer.windfinder.commons.ConstantsMain;
+
 import android.util.Log;
 
 public class GetForecastHttpUtil {
+	
+	private final String ENCODE = "UTF-8";
 
 
-
+	/**
+	 * Get string xml from winf finder server
+	 * */
 	public String getForecasts(String stationId) {		
 
 		HttpParams httpParameters = new BasicHttpParams();
@@ -33,8 +39,7 @@ public class GetForecastHttpUtil {
 
 		InputStream in = null;
 
-		String endpoint = "http://www.windfinder.com/api/forecast?CUSTOMER=vista&FORMAT=XML&STATIONS=" + stationId;
-		//		String requestParameters = "latlng=" + latitud + "," + longitud + "&sensor=false";
+		String endpoint = ConstantsMain.WINF_FINDER_END_POINT + stationId;		
 
 		String xml = null;
 		HttpClient httpClient = null;
@@ -42,30 +47,17 @@ public class GetForecastHttpUtil {
 		// Send a GET request to the servlet
 		try	{
 
-			// Send data
-			String urlStr = endpoint;
-			//				if (requestParameters != null && requestParameters.length () > 0) {
-			//					urlStr += "?" + requestParameters;
-			//				}
-
-
 			httpClient = new DefaultHttpClient(httpParameters);
 
-			Log.d("tag", "request url: " + urlStr);
-			HttpGet request = new HttpGet(urlStr);				
+			Log.d("tag", "request url: " + endpoint);
+			HttpGet request = new HttpGet(endpoint);				
 			HttpResponse httpresponse = httpClient.execute(request);
 
 			in = httpresponse.getEntity().getContent();
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-
-			String sResponse;
-			StringBuilder s = new StringBuilder();
-
-			while ((sResponse = reader.readLine()) != null) {
-				s = s.append(sResponse);
-			}
-			xml = s.toString();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in, ENCODE));
+			
+			xml = responseToString(reader);
 
 			in.close();
 			httpClient.getConnectionManager().shutdown();
@@ -82,6 +74,21 @@ public class GetForecastHttpUtil {
 		return xml;
 	}
 	
+	
+	
+	private String responseToString(BufferedReader reader) throws IOException {
+		String sResponse;
+		StringBuilder stringBuilder = new StringBuilder();
+
+		while ((sResponse = reader.readLine()) != null) {
+			stringBuilder = stringBuilder.append(sResponse);
+		}
+		
+		return stringBuilder.toString();
+	}
+	
+	
+
 	private void closeResources(InputStream in, HttpClient httpClient) {
 		try {
 			if (in != null) {

@@ -10,22 +10,17 @@ import com.mromer.windfinder.bean.Region;
 import com.mromer.windfinder.utils.XmlToContinentParserUtil;
 
 public class ContinentDao {
-	
-	
-	private final String TAG = this.getClass().getName();
 
 	private ArrayList<Continent> continents;
-	
-	private Context context;
-	
+
+	private Context context;	
 
 	public ContinentDao(Context context) {
-		
-		this.context = context;		
-		
+
+		this.context = context;
 	}
-	
-	
+
+
 	public void loadContinents() {
 		continents = new XmlToContinentParserUtil().getContinents(this.context);
 	}
@@ -39,8 +34,8 @@ public class ContinentDao {
 	public void setContinents(ArrayList<Continent> continents) {
 		this.continents = continents;
 	}
-	
-	
+
+
 	public Continent getContinentById(String id) {
 
 		ArrayList<Continent> continents = getContinents();
@@ -57,8 +52,8 @@ public class ContinentDao {
 
 		return continentResult;
 	}
-	
-	
+
+
 
 	public Country getCountryById(String idContinent, String idCountry) {
 
@@ -83,20 +78,18 @@ public class ContinentDao {
 
 
 		Country country = getCountryById(continentId, countryId);
-		
+
 		Region regionResult = null;
-		
+
 		for (Region region : country.getRegionList()) {
 
 			if (region.getId().equals(regionId)) {
-				
+
 				regionResult = region;
 				break;
 			}
 		}
 		return regionResult;
 	}
-
-
 
 }

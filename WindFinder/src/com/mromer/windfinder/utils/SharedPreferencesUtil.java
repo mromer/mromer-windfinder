@@ -54,11 +54,13 @@ public class SharedPreferencesUtil {
 		SharedPreferences prefsListStations = context.getSharedPreferences(
 				SHARED_STATIONS_LIST, Context.MODE_PRIVATE);		
 		prefsListStations.edit().remove(stationId).commit();
+		prefsListStations.edit().commit();
 		
 		// from station preferences
 		SharedPreferences prefsStation = context.getSharedPreferences(
 				stationId, Context.MODE_PRIVATE);		
 		prefsStation.edit().clear();
+		prefsStation.edit().commit();
 	}
 	
 	
@@ -90,9 +92,10 @@ public class SharedPreferencesUtil {
 		}
 		
 		if (windDirection == null) {
-			return "";
+			
+			windDirection =  "";
 		}
-
+		
 		return windDirection;
 	}
 
@@ -103,6 +106,7 @@ public class SharedPreferencesUtil {
 	public static Integer getWindLevelStation(Context context, String stationId) {
 		
 		String windLevelString = null;
+		Integer windLevelInteger = 0;
 		
 		Map<String, ?> stationPreferences = SharedPreferencesUtil.getStationPreferences(context, stationId);
 
@@ -111,10 +115,10 @@ public class SharedPreferencesUtil {
 		}
 		
 		if (windLevelString != null ) {
-			return Integer.parseInt((String) stationPreferences.get(SharedPreferencesUtil.SHARED_WIND_LEVEL));
+			windLevelInteger =  Integer.parseInt((String) stationPreferences.get(SharedPreferencesUtil.SHARED_WIND_LEVEL));
 		}
-
-		return 0;
+		
+		return windLevelInteger;
 	}
 	
 	/**

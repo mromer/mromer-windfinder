@@ -16,6 +16,13 @@
         android:visible="true"/>
     
     <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/content_remove"
+        app:showAsAction="never"
+        android:title="@string/action_refresh"
+        android:visible="true"/>
+    
+     <item
         android:id="@+id/action_remove"
         android:icon="@drawable/content_remove"
         app:showAsAction="never"

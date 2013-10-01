@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
-import com.mromer.windfinder.adapter.CountryListAdapter;
 import com.mromer.windfinder.bean.Continent;
 import com.mromer.windfinder.bean.Country;
 import com.mromer.windfinder.manager.ContinentManager;
@@ -93,8 +93,10 @@ public class CountryActivity extends SelectStationMainActivity {
 	private void drawList(List<Country> countries) {		
 		
 		if (countries != null) {
-
-			CountryListAdapter adapter = new CountryListAdapter(this, countries);
+			
+			ArrayAdapter<Country> adapter = new ArrayAdapter<Country>(this, 
+				    R.layout.list_item, R.id.name, countries);		
+			
 			listView.setAdapter(adapter);
 
 		}

@@ -16,6 +16,10 @@
     <string name="action_remove_station">Remove station</string>
     <string name="action_add_station">Add station</string>
     <string name="action_to_wind_info">To wind info</string>
+    <string name="action_refresh">Refresh</string>
+    
+    <string name="add_station_info">Please add a station</string>
+    
     
     <string name="wind_info_push">Wind info</string>
     
