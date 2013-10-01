@@ -9,10 +9,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mromer.windfinder.utils.ActivityUtil;
 
 public abstract class SelectStationMainActivity extends ActionBarActivity {	
+	
+	public final static String BUNDLE_CONTINENT_ID = "BUNDLE_CONTINENT_ID";
+	public final static String BUNDLE_CONTINENT_NAME = "BUNDLE_CONTINENT_NAME";
+	
+	public final static String BUNDLE_COUNTRY_ID = "BUNDLE_COUNTRY_ID";
+	public final static String BUNDLE_COUNTRY_NAME = "BUNDLE_COUNTRY_NAME";
+	
+	public final static String BUNDLE_REGION_ID = "BUNDLE_REGION_ID";
+	public final static String BUNDLE_REGION_NAME = "BUNDLE_REGION_NAME";
+	
 
 	private ActionBar actionBar;
 
@@ -41,6 +52,16 @@ public abstract class SelectStationMainActivity extends ActionBarActivity {
 
 			}
 		});
+	}
+	
+	
+	protected void setHeader(String header) {
+		TextView title = (TextView) findViewById(R.id.title);
+		if (header != null) {
+			title.setText(header);
+		} else {
+			title.setVisibility(TextView.GONE);
+		}		
 	}
 
 

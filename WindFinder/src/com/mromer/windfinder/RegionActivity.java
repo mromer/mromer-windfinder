@@ -26,7 +26,10 @@ public class RegionActivity extends SelectStationMainActivity {
 	private ContinentManager continentManager;
 
 	private String continentId;
+	private String continentName;
+	
 	private String countryId;
+	private String countryName;
 
 	private ArrayList<Continent> continentList;
 
@@ -40,6 +43,8 @@ public class RegionActivity extends SelectStationMainActivity {
 		setActionBar(R.string.select_region);
 
 		setIntentData();
+		
+		setHeader(continentName + " | " + countryName);
 
 		setUIComponents();
 
@@ -82,8 +87,10 @@ public class RegionActivity extends SelectStationMainActivity {
 	}
 
 	private void setIntentData() {
-		continentId = getIntent().getExtras().getString("CONTINENT_ID");
-		countryId = getIntent().getExtras().getString("COUNTRY_ID");		
+		continentId = getIntent().getExtras().getString(BUNDLE_CONTINENT_ID);
+		continentName = getIntent().getExtras().getString(BUNDLE_CONTINENT_NAME);
+		countryId = getIntent().getExtras().getString(BUNDLE_COUNTRY_ID);	
+		countryName = getIntent().getExtras().getString(BUNDLE_COUNTRY_NAME);	
 	}
 
 
@@ -105,13 +112,16 @@ public class RegionActivity extends SelectStationMainActivity {
 
 		Log.d(TAG, "region " + region.getName());
 
-		Intent intent = new Intent(this, StationActivity.class);
+		Intent intent = new Intent(this, StationActivity.class);		
+		
+		intent.putExtra(BUNDLE_CONTINENT_ID, continentId);
+		intent.putExtra(BUNDLE_CONTINENT_NAME, continentName);
+		
+		intent.putExtra(BUNDLE_COUNTRY_ID, countryId);
+		intent.putExtra(BUNDLE_COUNTRY_NAME, countryName);		
 
-		intent.putExtra("COUNTRY_ID", countryId);
-
-		intent.putExtra("CONTINENT_ID", continentId);
-
-		intent.putExtra("REGION_ID", region.getId());		
+		intent.putExtra(BUNDLE_REGION_ID, region.getId());
+		intent.putExtra(BUNDLE_REGION_NAME, region.getName());
 
 		startActivity(intent);
 

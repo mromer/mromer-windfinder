@@ -89,7 +89,7 @@ public class MoreInfoActivity extends ActionBarActivity {
 				R.layout.more_info_time_row, parentView, false);
 		
 		TextView timeTv = (TextView) row.findViewById(R.id.time);
-		timeTv.setText(time);		
+		timeTv.setText(time + " ");		
 		
 		parentView.addView(row);
 		

@@ -19,26 +19,31 @@ import com.mromer.windfinder.task.TaskResult;
 import com.mromer.windfinder.utils.AlertUtils;
 
 public class CountryActivity extends SelectStationMainActivity {
+	
 
 	private final String TAG = this.getClass().getName();
 
 	private ContinentManager continentManager;
 
 	private String continentId;
+	
+	private String continentName;
 
 	private ArrayList<Continent> continentList;
-
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		Log.d(TAG, "onCreate " + TAG);
 
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);			
 
 		setActionBar(R.string.select_country);
 
 		setIntentData();
+		
+		setHeader(continentName);
 		
 		setUIComponents();
 
@@ -86,7 +91,8 @@ public class CountryActivity extends SelectStationMainActivity {
 	}
 
 	private void setIntentData() {
-		continentId = getIntent().getExtras().getString("CONTINENT_ID");		
+		continentId = getIntent().getExtras().getString(BUNDLE_CONTINENT_ID);
+		continentName = getIntent().getExtras().getString(BUNDLE_CONTINENT_NAME);
 	}
 	
 
@@ -112,9 +118,11 @@ public class CountryActivity extends SelectStationMainActivity {
 
 		Intent intent = new Intent(this, RegionActivity.class);
 
-		intent.putExtra("COUNTRY_ID", country.getId());
+		intent.putExtra(BUNDLE_COUNTRY_ID, country.getId());
+		intent.putExtra(BUNDLE_COUNTRY_NAME, country.getName());
 
-		intent.putExtra("CONTINENT_ID", continentId);
+		intent.putExtra(BUNDLE_CONTINENT_ID, continentId);
+		intent.putExtra(BUNDLE_CONTINENT_NAME, continentName);
 
 		startActivity(intent);
 

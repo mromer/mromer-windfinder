@@ -29,8 +29,11 @@ public class StationActivity extends SelectStationMainActivity {
 	private ContinentManager continentManager;
 
 	private String continentId;
+	private String continentName;
 	private String countryId;
+	private String countryName;
 	private String regionId;
+	private String regionName;
 
 	private ArrayList<Continent> continentList;		
 
@@ -44,12 +47,15 @@ public class StationActivity extends SelectStationMainActivity {
 		setActionBar(R.string.select_station);
 
 		setIntentData();
+		
+		setHeader(continentName + " | " + countryName + " | " + regionName);
 
 		setUIComponents();
 
 		drawListProcess();
 
 	}
+	
 
 	private void drawListProcess() {
 
@@ -92,9 +98,12 @@ public class StationActivity extends SelectStationMainActivity {
 	}
 
 	private void setIntentData() {
-		continentId = getIntent().getExtras().getString("CONTINENT_ID");
-		countryId = getIntent().getExtras().getString("COUNTRY_ID");
-		regionId = getIntent().getExtras().getString("REGION_ID");		
+		continentId = getIntent().getExtras().getString(BUNDLE_CONTINENT_ID);
+		continentName = getIntent().getExtras().getString(BUNDLE_CONTINENT_NAME);
+		countryId = getIntent().getExtras().getString(BUNDLE_COUNTRY_ID);
+		countryName = getIntent().getExtras().getString(BUNDLE_COUNTRY_NAME);
+		regionId = getIntent().getExtras().getString(BUNDLE_REGION_ID);
+		regionName = getIntent().getExtras().getString(BUNDLE_REGION_NAME);
 	}
 
 	private void drawList(List<Station> stations) {

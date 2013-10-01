@@ -197,6 +197,12 @@ public class WindInfoActivity extends ActionBarActivity  {
 		startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(startMain);
 	}
+	
+	
+	@Override
+	public void onBackPressed() {		
+		toHome();		
+	}
 
 	
 	/**

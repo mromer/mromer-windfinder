@@ -26,13 +26,13 @@
             </intent-filter>
         </activity>
         <activity android:name="com.mromer.windfinder.ContinentActivity" 
-            android:launchMode="singleInstance"/>
+            />
         <activity android:name="com.mromer.windfinder.CountryActivity" 
-            android:launchMode="singleInstance"/>
+            />
         <activity android:name="com.mromer.windfinder.RegionActivity"
-            android:launchMode="singleInstance" />
+             />
         <activity android:name="com.mromer.windfinder.StationActivity"
-            android:launchMode="singleInstance" />
+            />
         
         <activity android:name="com.mromer.windfinder.MoreInfoActivity" />
         <activity android:name="com.mromer.windfinder.StationPreferencesActivity" />
