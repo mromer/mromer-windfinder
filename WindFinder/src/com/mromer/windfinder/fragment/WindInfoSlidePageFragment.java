@@ -18,14 +18,26 @@ import com.mromer.windfinder.utils.StringUtils;
 
 public class WindInfoSlidePageFragment extends Fragment {
 
+	public static String FORECAST_INFO = "FORECAST_INFO";
+	public static String LIST_FORECAST_SIZE = "LIST_FORECAST_SIZE";
+	public static String VIEW_POSITION = "VIEW_POSITION";
+
 	private Forecast forecast;
-	
+	private int listForecastSize;
+	private int viewPosition;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 
 		forecast = (Forecast) getArguments()
-				.getSerializable("FORECAST_INFO");
+				.getSerializable(FORECAST_INFO);
+
+		listForecastSize = getArguments()
+				.getInt(LIST_FORECAST_SIZE);
+
+		viewPosition = getArguments()
+				.getInt(VIEW_POSITION);
 
 	};
 
@@ -34,12 +46,9 @@ public class WindInfoSlidePageFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
-				R.layout.activity_country, container, false);		
+				R.layout.wind_info_fragment, container, false);	
 
-		TextView tv = (TextView) rootView.findViewById(R.id.stationName);
-		
-		tv.setText(forecast.getStationForecast().getName());
-
+		setHeaderView(rootView);
 
 		String actualDate = "";
 
@@ -72,60 +81,17 @@ public class WindInfoSlidePageFragment extends Fragment {
 		}
 
 		return rootView;
-	}	
+	}		
+	
 
+	private void setHeaderView(View view) {
 
+		TextView tv = (TextView) view.findViewById(R.id.stationName);
 
+		tv.setText(forecast.getStationForecast().getName());
 
-	private void addDataTime(LinearLayout parentView, ForecastItem forecastItem, LayoutInflater inflater) {
+		arrowButtons(view);
 
-		LinearLayout column = (LinearLayout) inflater.inflate(
-				R.layout.wind_info_chart2, parentView, false);		
-
-
-		TextView tvTime = (TextView) column.findViewById(R.id.time);
-		tvTime.setText(forecastItem.getDate() + " " + forecastItem.getTime());
-
-		TextView tv1 = (TextView) column.findViewById(R.id.air_temperature);
-		tv1.setText(forecastItem.getForecastDataMap().get("air_temperature").getValue());
-
-		TextView tv2 = (TextView) column.findViewById(R.id.water_temperature);
-		tv2.setText(forecastItem.getForecastDataMap().get("water_temperature").getValue());
-
-		TextView tv3 = (TextView) column.findViewById(R.id.wind_direction);
-		tv3.setText(forecastItem.getForecastDataMap().get("wind_direction").getValue());
-
-		TextView tv4 = (TextView) column.findViewById(R.id.wind_speed);
-		tv4.setText(forecastItem.getForecastDataMap().get("wind_speed").getValue());
-
-		TextView tv5 = (TextView) column.findViewById(R.id.wind_gusts);
-		tv5.setText(forecastItem.getForecastDataMap().get("wind_gusts").getValue());
-
-		TextView tv6 = (TextView) column.findViewById(R.id.weather);
-		tv6.setText(forecastItem.getForecastDataMap().get("weather").getValue());
-
-		TextView tv7 = (TextView) column.findViewById(R.id.clouds);
-		tv7.setText(forecastItem.getForecastDataMap().get("clouds").getValue());
-
-		TextView tv8 = (TextView) column.findViewById(R.id.precipitation);
-		tv8.setText(forecastItem.getForecastDataMap().get("precipitation").getValue());
-
-		TextView tv9 = (TextView) column.findViewById(R.id.precipitation_type);
-		tv9.setText(forecastItem.getForecastDataMap().get("precipitation_type").getValue());
-
-		TextView tv10 = (TextView) column.findViewById(R.id.wave_height);
-		tv10.setText(forecastItem.getForecastDataMap().get("wave_height").getValue());
-
-		TextView tv11 = (TextView) column.findViewById(R.id.wave_direction);
-		tv11.setText(forecastItem.getForecastDataMap().get("wave_direction").getValue());
-
-		TextView tv12 = (TextView) column.findViewById(R.id.wave_period);
-		tv12.setText(forecastItem.getForecastDataMap().get("wave_period").getValue());
-
-		TextView tv13 = (TextView) column.findViewById(R.id.air_pressure);
-		tv13.setText(forecastItem.getForecastDataMap().get("air_pressure").getValue());
-
-		parentView.addView(column);
 	}
 
 
@@ -136,10 +102,10 @@ public class WindInfoSlidePageFragment extends Fragment {
 
 		TextView tvDate = (TextView) column.findViewById(R.id.date);
 		tvDate.setText(StringUtils.toDate(forecastItem.getDate()));		
-		
+
 		ImageButton moreInfoButton = (ImageButton) column.findViewById(R.id.moreInfo);
 		moreInfoButton.setTag(forecastItem.getDate());
-		
+
 		parentView.addView(column);
 	}
 
@@ -148,10 +114,10 @@ public class WindInfoSlidePageFragment extends Fragment {
 		LinearLayout column = (LinearLayout) inflater.inflate(
 				R.layout.wind_info_chart_column_names2, parentView, false);
 
-		
+
 		TextView tvTimezone = (TextView) column.findViewById(R.id.timezone);
 		tvTimezone.setText(StringUtils.toTimezone(timezone));	
-		
+
 		parentView.addView(column);
 	}
 
@@ -180,35 +146,33 @@ public class WindInfoSlidePageFragment extends Fragment {
 
 		TextView tvClouds = (TextView) column.findViewById(R.id.clouds);
 		tvClouds.setText(forecastItem.getForecastDataMap().get("clouds").getValue());
-		
+
 
 		parentView.addView(column);
 	}
 
+	/**
+	 * Enable or disable de left and right images from the current view.
+	 * */
+	private void arrowButtons(View view) {
 
+		if (listForecastSize == 1 ) {
+			// Remove the arrows
+			ImageView leftArrowImage = (ImageView) view.findViewById(R.id.leftArrow);
+			leftArrowImage.setVisibility(View.INVISIBLE);
+			ImageView rightArrowImage = (ImageView) view.findViewById(R.id.rightArrow);
+			rightArrowImage.setVisibility(View.INVISIBLE);
+		} else if (viewPosition == 0) {			
+			// Remove left arrow
+			ImageView leftArrowImage = (ImageView) view.findViewById(R.id.leftArrow);
+			leftArrowImage.setVisibility(View.INVISIBLE);			
+		} else if (viewPosition == listForecastSize-1) {
+			// Remove right arrow
+			ImageView rightArrowImage = (ImageView) view.findViewById(R.id.rightArrow);
+			rightArrowImage.setVisibility(View.INVISIBLE);
+		}		
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	}
 
 
 }

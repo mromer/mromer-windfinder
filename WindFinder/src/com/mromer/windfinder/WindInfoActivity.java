@@ -18,6 +18,7 @@ import android.view.View;
 
 import com.mromer.windfinder.adapter.WindInfoSlidePagerAdapter;
 import com.mromer.windfinder.bean.Forecast;
+import com.mromer.windfinder.receiver.IncomingAlarmReceiver;
 import com.mromer.windfinder.task.ForecastLoadTaskResultI;
 import com.mromer.windfinder.task.ForecastTaskResult;
 import com.mromer.windfinder.task.GetForecastTask;
@@ -105,9 +106,9 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 	private void manageNotification() {
 		// Delete notification in the bar
-		IncomingAlarm.cancelNotification(this);
+		IncomingAlarmReceiver.cancelNotification(this);
 
-		IncomingAlarm.startAlarmManager(this);
+		IncomingAlarmReceiver.startAlarmManager(this);
 	}
 	
 
@@ -255,8 +256,8 @@ public class WindInfoActivity extends ActionBarActivity  {
 			DialogInterface.OnClickListener negativeAction) {
 		
 		String warningText = getResources().getString(R.string.remove_station_warning);
-		String acceptText = getResources().getString(R.string.remove_station_warning);
-		String cancelText = getResources().getString(R.string.remove_station_warning);
+		String acceptText = getResources().getString(R.string.accept);
+		String cancelText = getResources().getString(R.string.cancel);
 		AlertUtils.showAlertWithAction(this, warningText + " " +
 				forecast.getStationForecast().getName() + "?", acceptText , cancelText, 
 				positiveAction, negativeAction);
@@ -305,7 +306,7 @@ public class WindInfoActivity extends ActionBarActivity  {
 
 		mPager.setAdapter(mPagerAdapter);
 
-		mPagerAdapter.notifyDataSetChanged();
+		mPagerAdapter.notifyDataSetChanged();		
 	}
 
 
@@ -376,13 +377,13 @@ public class WindInfoActivity extends ActionBarActivity  {
 	private void preferencesAction() {
 		Forecast forecast = forecastTaskResult.getForecastList().get(mPager.getCurrentItem());
 
-		Intent intent = new Intent(this, PreferenceWithHeaders.class);
+		Intent intent = new Intent(this, StationPreferencesActivity.class);
 
 		String stationId = forecast.getStationForecast().getId();
 		String stationName = forecast.getStationForecast().getName();
 
-		intent.putExtra(PreferenceWithHeaders.BUNDLE_PREFERENCE_NAME, stationId);
-		intent.putExtra(PreferenceWithHeaders.BUNDLE_STATION_NAME, stationName);
+		intent.putExtra(StationPreferencesActivity.BUNDLE_PREFERENCE_NAME, stationId);
+		intent.putExtra(StationPreferencesActivity.BUNDLE_STATION_NAME, stationName);
 
 		startActivityForResult(intent, RESULT_SETTINGS);	
 	}

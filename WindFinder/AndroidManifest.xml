@@ -35,9 +35,9 @@
             android:launchMode="singleInstance" />
         
         <activity android:name="com.mromer.windfinder.MoreInfoActivity" />
-        <activity android:name="com.mromer.windfinder.PreferenceWithHeaders" />
+        <activity android:name="com.mromer.windfinder.StationPreferencesActivity" />
         
-        <receiver android:name="com.mromer.windfinder.IncomingAlarm">   
+        <receiver android:name="com.mromer.windfinder.receiver.IncomingAlarmReceiver">   
                     <intent-filter>
                     <action android:name="com.mromer.windfinder" />
                     </intent-filter>

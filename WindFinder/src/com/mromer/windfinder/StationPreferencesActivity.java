@@ -9,7 +9,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-public class PreferenceWithHeaders extends PreferenceActivity {
+public class StationPreferencesActivity extends PreferenceActivity {
 
 	public final static String BUNDLE_PREFERENCE_NAME = "BUNDLE_PREFERENCE_NAME";
 	public final static String BUNDLE_STATION_NAME = "BUNDLE_STATION_NAME";
@@ -25,7 +25,7 @@ public class PreferenceWithHeaders extends PreferenceActivity {
 		String stationName = getIntent().getExtras().getString(BUNDLE_STATION_NAME);
 		
 		Intent intent = getIntent();
-		intent.putExtra(PreferenceWithHeaders.BUNDLE_PREFERENCE_NAME, preferencesName);
+		intent.putExtra(StationPreferencesActivity.BUNDLE_PREFERENCE_NAME, preferencesName);
 		setResult(RESULT_OK, intent);
 		
 
@@ -38,7 +38,7 @@ public class PreferenceWithHeaders extends PreferenceActivity {
 		// This method was deprecated in API level 11. 
 		// This function is not relevant for a modern fragment-based PreferenceActivity
 		// but we are working with min api level 9        
-		addPreferencesFromResource(R.xml.preference_headers);
+		addPreferencesFromResource(R.xml.station_preferences);
 
 
 		//get a handle on preferences that require validation
@@ -68,7 +68,7 @@ public class PreferenceWithHeaders extends PreferenceActivity {
 			return true;
 		}
 		else {
-			Toast.makeText(PreferenceWithHeaders.this, newValue + " " + 
+			Toast.makeText(StationPreferencesActivity.this, newValue + " " + 
 					getResources().getString(R.string.error_not_a_number), Toast.LENGTH_SHORT).show();
 			
 			return false;

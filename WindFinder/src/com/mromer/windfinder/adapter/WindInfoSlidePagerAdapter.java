@@ -37,7 +37,9 @@ public class WindInfoSlidePagerAdapter extends FragmentStatePagerAdapter {
 		
 		Fragment f = new WindInfoSlidePageFragment();
 		Bundle b = new Bundle();
-		b.putSerializable("FORECAST_INFO", forecast);		
+		b.putSerializable(WindInfoSlidePageFragment.FORECAST_INFO, forecast);		
+		b.putInt(WindInfoSlidePageFragment.LIST_FORECAST_SIZE, windCards.size());
+		b.putInt(WindInfoSlidePageFragment.VIEW_POSITION, position);
 		
 		f.setArguments(b);					
 

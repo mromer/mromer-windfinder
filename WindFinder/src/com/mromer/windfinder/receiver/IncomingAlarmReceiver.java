@@ -1,4 +1,4 @@
-package com.mromer.windfinder;
+package com.mromer.windfinder.receiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.mromer.windfinder.R;
+import com.mromer.windfinder.WindInfoActivity;
 import com.mromer.windfinder.bean.Forecast;
 import com.mromer.windfinder.bean.ForecastItem;
 import com.mromer.windfinder.task.ForecastLoadTaskResultI;
@@ -27,7 +29,7 @@ import com.mromer.windfinder.utils.SharedPreferencesUtil;
  * Manage the alarm manager.
  * Manage the alarm manager events and throw notifications.
  * */
-public class IncomingAlarm extends BroadcastReceiver {
+public class IncomingAlarmReceiver extends BroadcastReceiver {
 
 	private final String TAG = this.getClass().getName();
 
