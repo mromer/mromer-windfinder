@@ -24,8 +24,7 @@ public class ContinentActivity extends SelectStationMainActivity  {
 
 	private ArrayList<Continent> continents;
 
-	private ContinentManager continentManager;
-	
+	private ContinentManager continentManager;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +58,6 @@ public class ContinentActivity extends SelectStationMainActivity  {
 				public void taskSuccess(TaskResult result) {
 					continents = continentManager.getAllContinents();
 					drawList(continents);
-
 				}
 
 				@Override
@@ -74,9 +72,7 @@ public class ContinentActivity extends SelectStationMainActivity  {
 		} else {
 
 			drawList(continents);
-
 		}
-
 	}
 
 	private void drawList(ArrayList<Continent> continents) {
@@ -86,15 +82,15 @@ public class ContinentActivity extends SelectStationMainActivity  {
 				    R.layout.list_item, R.id.name, continents);
 			
 			listView.setAdapter(adapter);
-
 		}
-
 	}
+	
 	
 	@Override
 	public void onBackPressed() {		
 		ActivityUtil.toNextActivity(this, WindInfoActivity.class);
 	}
+	
 
 	@Override
 	protected void onListItemClick(AdapterView<?> adapterView, View v, int position, long id) {
@@ -109,7 +105,6 @@ public class ContinentActivity extends SelectStationMainActivity  {
 		intent.putExtra(BUNDLE_CONTINENT_NAME, continent.getName());
 
 		startActivity(intent);
-
 	}
 	
 	@Override

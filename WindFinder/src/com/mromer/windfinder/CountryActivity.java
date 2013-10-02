@@ -18,8 +18,7 @@ import com.mromer.windfinder.task.LoadXmlTask;
 import com.mromer.windfinder.task.TaskResult;
 import com.mromer.windfinder.utils.AlertUtils;
 
-public class CountryActivity extends SelectStationMainActivity {
-	
+public class CountryActivity extends SelectStationMainActivity {	
 
 	private final String TAG = this.getClass().getName();
 
@@ -76,7 +75,8 @@ public class CountryActivity extends SelectStationMainActivity {
 				@Override
 				public void taskFailure(TaskResult result) {
 
-					AlertUtils.showAlert(CountryActivity.this, result.getDesc(), "aceptar");
+					AlertUtils.showAlert(CountryActivity.this, result.getDesc(), 
+							getResources().getString(R.string.accept));
 
 				}
 			}).execute();

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.mromer.windfinder.R;
 import com.mromer.windfinder.bean.Forecast;
 import com.mromer.windfinder.bean.ForecastItem;
-import com.mromer.windfinder.utils.IconUtil;
+import com.mromer.windfinder.utils.ResourcesUtil;
 import com.mromer.windfinder.utils.StringUtils;
 
 public class WindInfoSlidePageFragment extends Fragment {
@@ -47,11 +47,13 @@ public class WindInfoSlidePageFragment extends Fragment {
 			Bundle savedInstanceState) {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.wind_info_fragment, container, false);	
-
+		
+		// Title + arrow buttons
 		setHeaderView(rootView);
 
 		String actualDate = "";
 
+		// Layout for each date
 		LinearLayout chart = null;
 
 		for (ForecastItem forecastItem : forecast.getStationForecast().getForecastItems()) {	
@@ -66,10 +68,11 @@ public class WindInfoSlidePageFragment extends Fragment {
 						R.layout.wind_info_chart2, (LinearLayout) rootView.findViewById(R.id.dataRow), false);
 
 				actualDate = forecastItem.getDate();
-				// Add row date
-				addDataDate(chart, forecastItem, inflater);
-
-				addDataInfo(chart, inflater, forecast.getStationForecast().getTimezone());
+				
+				// Header date row
+				addDataDateRow(chart, forecastItem, inflater);
+				// Header with icons
+				addDataInfoRow(chart, inflater, forecast.getStationForecast().getTimezone());
 			}
 
 			addDataForecast(chart, forecastItem, inflater);					
@@ -84,6 +87,9 @@ public class WindInfoSlidePageFragment extends Fragment {
 	}		
 	
 
+	/**
+	 * Draw station name + arrow buttons
+	 * */
 	private void setHeaderView(View view) {
 
 		TextView tv = (TextView) view.findViewById(R.id.stationName);
@@ -91,11 +97,13 @@ public class WindInfoSlidePageFragment extends Fragment {
 		tv.setText(forecast.getStationForecast().getName());
 
 		arrowButtons(view);
-
 	}
 
 
-	private void addDataDate(LinearLayout parentView, ForecastItem forecastItem, LayoutInflater inflater) {
+	/**
+	 * Add a row in parentView with the date and a icon to more info.
+	 * */
+	private void addDataDateRow(LinearLayout parentView, ForecastItem forecastItem, LayoutInflater inflater) {
 
 		LinearLayout column = (LinearLayout) inflater.inflate(
 				R.layout.wind_info_chart_row_date, parentView, false);
@@ -103,16 +111,21 @@ public class WindInfoSlidePageFragment extends Fragment {
 		TextView tvDate = (TextView) column.findViewById(R.id.date);
 		tvDate.setText(StringUtils.toDate(forecastItem.getDate()));		
 
+		// This tag will be used to get more info.
 		ImageButton moreInfoButton = (ImageButton) column.findViewById(R.id.moreInfo);
 		moreInfoButton.setTag(forecastItem.getDate());
 
 		parentView.addView(column);
 	}
 
-	private void addDataInfo(LinearLayout parentView, LayoutInflater inflater, String timezone) {
+	
+	/**
+	 * Add a row in parentView with header icons.
+	 * */
+	private void addDataInfoRow(LinearLayout parentView, LayoutInflater inflater, String timezone) {
 
 		LinearLayout column = (LinearLayout) inflater.inflate(
-				R.layout.wind_info_chart_column_names2, parentView, false);
+				R.layout.wind_info_chart_row_names, parentView, false);
 
 
 		TextView tvTimezone = (TextView) column.findViewById(R.id.timezone);
@@ -122,31 +135,36 @@ public class WindInfoSlidePageFragment extends Fragment {
 	}
 
 
+	/**
+	 * Add a row in parentView with the forecast info.
+	 * */
 	private void addDataForecast(LinearLayout parentView, ForecastItem forecastItem, LayoutInflater inflater) {
 
 		LinearLayout column = (LinearLayout) inflater.inflate(
-				R.layout.wind_info_chart_column_data2, parentView, false);
+				R.layout.wind_info_chart_row_data, parentView, false);
 
+		// Time
 		TextView tvTime = (TextView) column.findViewById(R.id.time);
 		tvTime.setText(StringUtils.toTime(forecastItem.getTime()));
 
-
+		// Wind direction
 		ImageView ivWindDirection = (ImageView) column.findViewById(R.id.wind_direction);
-		ivWindDirection.setImageResource(IconUtil.
-				getDirectionIconId(forecastItem.getForecastDataMap().get("wind_direction").getValue()));
+		ivWindDirection.setImageResource(ResourcesUtil.
+				getDirectionIconId(forecastItem.getForecastDataMap().get(ForecastItem.TAG_WIND_DIRECTION).getValue()));
 
+		// Wind speed
 		TextView tvWindSpeed = (TextView) column.findViewById(R.id.wind_speed);
-		tvWindSpeed.setText(forecastItem.getForecastDataMap().get("wind_speed").getValue() + " " 
-				+ forecastItem.getForecastDataMap().get("wind_speed").getUnit());
+		tvWindSpeed.setText(forecastItem.getForecastDataMap().get(ForecastItem.TAG_WIND_SPEED).getValue() + " " 
+				+ forecastItem.getForecastDataMap().get(ForecastItem.TAG_WIND_SPEED).getUnit());
 
-
+		// Air temperature
 		TextView tvAirTemperature = (TextView) column.findViewById(R.id.air_temperature);
 		tvAirTemperature.setText(StringUtils.removeDecimals(forecastItem.getForecastDataMap()
-				.get("air_temperature").getValue()) + "º");		
+				.get(ForecastItem.TAG_AIR_TEMPERATURE).getValue()) + "º");		
 
+		// Clouds
 		TextView tvClouds = (TextView) column.findViewById(R.id.clouds);
-		tvClouds.setText(forecastItem.getForecastDataMap().get("clouds").getValue());
-
+		tvClouds.setText(forecastItem.getForecastDataMap().get(ForecastItem.TAG_CLOUDS).getValue());
 
 		parentView.addView(column);
 	}
@@ -170,8 +188,7 @@ public class WindInfoSlidePageFragment extends Fragment {
 			// Remove right arrow
 			ImageView rightArrowImage = (ImageView) view.findViewById(R.id.rightArrow);
 			rightArrowImage.setVisibility(View.INVISIBLE);
-		}		
-
+		}
 	}
 
 

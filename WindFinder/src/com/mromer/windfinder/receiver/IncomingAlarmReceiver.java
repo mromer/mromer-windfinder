@@ -35,7 +35,8 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 	private final String TAG = this.getClass().getName();
 
 	private Context context;
-	private final static int NOTIFICATION_ID = 1;
+	
+	private static final  int NOTIFICATION_ID = 1;
 	
 	private static final String PACKAGE_NAME = "com.mromer.windfinder";
 
@@ -47,6 +48,11 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 		processNotification();
 	}
 
+	
+	/**
+	 * Get the stations in shared preferences with enabled notifications and
+	 * send the notification.
+	 * */
 	private void processNotification() {
 
 		Map<String, String> stations = SharedPreferencesUtil.getStationsSelected(context);
@@ -61,6 +67,9 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 	}
 
 
+	/**
+	 * Get the forecast, check if send notifications and it send it.
+	 * */
 	private void sendNotificationMenssagesTask(final List<String> stationsWithNotification) {
 
 		// Run the GetForecastTask
@@ -81,6 +90,9 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 	}
 
 
+	/**
+	 * Run when get forecast success. Check notifications and send it.
+	 * */
 	private void sendNotificationMenssagesTaskSuccess(ForecastTaskResult result,
 			List<String> stationsWithNotification) {
 
@@ -102,6 +114,9 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 	}
 
 
+	/**
+	 * Compare the preferences with forecast.
+	 * */
 	private String compareDataPreferences(String stationId, ForecastTaskResult forecastTaskResult) {
 
 		String messageResult = null;
@@ -152,7 +167,9 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 	}	
 
 	
-	
+	/**
+	 * Get the stations with enabled notification.
+	 * */
 	private List<String> stationsWithNotificationEnabled(Map<String, String> stations) {
 
 		List<String> stationsWithNotification = new ArrayList<String>();
@@ -183,6 +200,10 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 	}
 
 
+	/**
+	 * Process that check periodically if send a notification. The period
+	 * is set in <code>ConstantsMain.ALARM_MANAGER_REPETITION_TIME</code>
+	 * */
 	public static void startAlarmManager(Context context) {
 
 		PendingIntent  pi = PendingIntent.getBroadcast( context, 0, new Intent(PACKAGE_NAME), 0);

@@ -9,7 +9,6 @@ import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.util.Log;
 import android.util.Xml;
 
 import com.mromer.windfinder.bean.Forecast;
@@ -21,6 +20,8 @@ public class XmlToForecastParserUtil {
 
 	// We don't use namespaces
 	private static final String ns = null;
+	
+	private static final String TAG_FORECASTS = "forecasts";
 
 
 	public Forecast getForecast(InputStream inputStream) {
@@ -67,9 +68,9 @@ public class XmlToForecastParserUtil {
 	private Forecast readForecast(XmlPullParser parser) throws XmlPullParserException, IOException {
 		Forecast forecast = new Forecast();
 
-		parser.require(XmlPullParser.START_TAG, ns, "forecasts");
+		parser.require(XmlPullParser.START_TAG, ns, TAG_FORECASTS);
 
-		forecast.setTimestamp(parser.getAttributeValue(null, "timestamp"));
+		forecast.setTimestamp(parser.getAttributeValue(null, Forecast.TAG_TIMESTAMP));
 
 		while (parser.next() != XmlPullParser.END_TAG) {
 			if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -77,7 +78,7 @@ public class XmlToForecastParserUtil {
 			}
 			String name = parser.getName();
 			// Starts by looking for the entry tag
-			if (name.equals("station")) {
+			if (name.equals(Forecast.TAG_STATION)) {
 
 				forecast.setStationForecast(readForecastStation(parser));
 
@@ -91,13 +92,13 @@ public class XmlToForecastParserUtil {
 	private ForecastStation readForecastStation(XmlPullParser parser) throws XmlPullParserException, IOException {
 		ForecastStation forecastStation = new ForecastStation();
 
-		parser.require(XmlPullParser.START_TAG, ns, "station");
+		parser.require(XmlPullParser.START_TAG, ns, Forecast.TAG_STATION);
 
 		List<ForecastItem> forecastItems = new ArrayList<ForecastItem>();
 
-		forecastStation.setId(parser.getAttributeValue(null, "id"));
-		forecastStation.setName(parser.getAttributeValue(null, "name"));
-		forecastStation.setTimezone(parser.getAttributeValue(null, "timezone"));
+		forecastStation.setId(parser.getAttributeValue(null, ForecastStation.TAG_ID));
+		forecastStation.setName(parser.getAttributeValue(null, ForecastStation.TAG_NAME));
+		forecastStation.setTimezone(parser.getAttributeValue(null, ForecastStation.TAG_TIMEZONE));
 
 		while (parser.next() != XmlPullParser.END_TAG) {
 			if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -105,7 +106,7 @@ public class XmlToForecastParserUtil {
 			}
 			String name = parser.getName();
 			// Starts by looking for the entry tag
-			if (name.equals("forecast")) {
+			if (name.equals(ForecastStation.TAG_FORECAST)) {
 
 				forecastItems.add(readForecastItem(parser));
 
@@ -124,12 +125,11 @@ public class XmlToForecastParserUtil {
 
 		ForecastItem forecastItem = new ForecastItem();
 
-		parser.require(XmlPullParser.START_TAG, ns, "forecast");
-
+		parser.require(XmlPullParser.START_TAG, ns, ForecastStation.TAG_FORECAST);
 		
 
-		forecastItem.setDate(parser.getAttributeValue(null, "date"));
-		forecastItem.setTime(parser.getAttributeValue(null, "time"));
+		forecastItem.setDate(parser.getAttributeValue(null, ForecastItem.TAG_DATE));
+		forecastItem.setTime(parser.getAttributeValue(null, ForecastItem.TAG_TIME));
 		
 		HashMap<String, ForecastData> forecastDataMap = new HashMap<String, ForecastData>();
 
@@ -141,44 +141,54 @@ public class XmlToForecastParserUtil {
 			String name = parser.getName();
 			// Starts by looking for the entry tag			
 
-			if (name.equals("air_temperature")) {
-				forecastDataMap.put("air_temperature", (readForecastData(parser, "air_temperature")));
+			if (name.equals(ForecastItem.TAG_AIR_TEMPERATURE)) {
+				forecastDataMap.put(ForecastItem.TAG_AIR_TEMPERATURE, 
+						(readForecastData(parser, ForecastItem.TAG_AIR_TEMPERATURE)));
 
-			} else if (name.equals("water_temperature")) {
-				forecastDataMap.put("water_temperature", (readForecastData(parser, "water_temperature")));			
+			} else if (name.equals(ForecastItem.TAG_WATER_TEMPERATURE)) {
+				forecastDataMap.put(ForecastItem.TAG_WATER_TEMPERATURE, 
+						(readForecastData(parser, ForecastItem.TAG_WATER_TEMPERATURE)));			
 				
-			} else if (name.equals("wind_direction")) {
-				forecastDataMap.put("wind_direction", (readForecastData(parser, "wind_direction")));	
+			} else if (name.equals(ForecastItem.TAG_WIND_DIRECTION)) {
+				forecastDataMap.put(ForecastItem.TAG_WIND_DIRECTION, 
+						(readForecastData(parser, ForecastItem.TAG_WIND_DIRECTION)));	
 				
-			} else if (name.equals("wind_speed")) {				
-				forecastDataMap.put("wind_speed", (readForecastData(parser, "wind_speed")));	
+			} else if (name.equals(ForecastItem.TAG_WIND_SPEED)) {				
+				forecastDataMap.put(ForecastItem.TAG_WIND_SPEED, 
+						(readForecastData(parser, ForecastItem.TAG_WIND_SPEED)));	
 				
-			} else if (name.equals("wind_gusts")) {
-				forecastDataMap.put("wind_gusts", (readForecastData(parser, "wind_gusts")));	
+			} else if (name.equals(ForecastItem.TAG_WIND_GUSTS)) {
+				forecastDataMap.put(ForecastItem.TAG_WIND_GUSTS, 
+						(readForecastData(parser, ForecastItem.TAG_WIND_GUSTS)));	
 				
-			} else if (name.equals("weather")) {
-				forecastDataMap.put("weather", (readForecastData(parser, "weather")));	
+			} else if (name.equals(ForecastItem.TAG_WEATHER)) {
+				forecastDataMap.put(ForecastItem.TAG_WEATHER, 
+						(readForecastData(parser, ForecastItem.TAG_WEATHER)));	
 				
-			} else if (name.equals("clouds")) {
-				forecastDataMap.put("clouds", (readForecastData(parser, "clouds")));	
+			} else if (name.equals(ForecastItem.TAG_CLOUDS)) {
+				forecastDataMap.put(ForecastItem.TAG_CLOUDS, 
+						(readForecastData(parser, ForecastItem.TAG_CLOUDS)));	
 				
-			} else if (name.equals("precipitation")) {
-				forecastDataMap.put("precipitation", (readForecastData(parser, "precipitation")));	
+			} else if (name.equals(ForecastItem.TAG_PRECIPITATION)) {
+				forecastDataMap.put(ForecastItem.TAG_PRECIPITATION, 
+						(readForecastData(parser, ForecastItem.TAG_PRECIPITATION)));	
 				
-			} else if (name.equals("precipitation_type")) {
-				forecastDataMap.put("precipitation_type", (readForecastData(parser, "precipitation_type")));	
+			} else if (name.equals(ForecastItem.TAG_PRECIPITATION_TYPE)) {
+				forecastDataMap.put(ForecastItem.TAG_PRECIPITATION_TYPE, 
+						(readForecastData(parser, ForecastItem.TAG_PRECIPITATION_TYPE)));	
 				
-			} else if (name.equals("wave_height")) {
-				forecastDataMap.put("wave_height", (readForecastData(parser, "wave_height")));	
+			} else if (name.equals(ForecastItem.TAG_WAVE_HEIGHT)) {
+				forecastDataMap.put(ForecastItem.TAG_WAVE_HEIGHT, 
+						(readForecastData(parser, ForecastItem.TAG_WAVE_HEIGHT)));	
 				
-			} else if (name.equals("wave_direction")) {
-				forecastDataMap.put("wave_direction", (readForecastData(parser, "wave_direction")));	
+			} else if (name.equals(ForecastItem.TAG_WAVE_DIRECTION)) {
+				forecastDataMap.put(ForecastItem.TAG_WAVE_DIRECTION, (readForecastData(parser, ForecastItem.TAG_WAVE_DIRECTION)));	
 				
-			} else if (name.equals("wave_period")) {
-				forecastDataMap.put("wave_period", (readForecastData(parser, "wave_period")));	
+			} else if (name.equals(ForecastItem.TAG_WAVE_PERIOD)) {
+				forecastDataMap.put(ForecastItem.TAG_WAVE_PERIOD, (readForecastData(parser, ForecastItem.TAG_WAVE_PERIOD)));	
 				
-			} else if (name.equals("air_pressure")) {
-				forecastDataMap.put("air_pressure", (readForecastData(parser, "air_pressure")));	
+			} else if (name.equals(ForecastItem.TAG_AIR_PRESSURE)) {
+				forecastDataMap.put(ForecastItem.TAG_AIR_PRESSURE, (readForecastData(parser, ForecastItem.TAG_AIR_PRESSURE)));	
 				
 			} else {
 				skip(parser);
@@ -196,7 +206,7 @@ public class XmlToForecastParserUtil {
 		
 		parser.require(XmlPullParser.START_TAG, ns, tag);		
 		
-		forecastData.setUnit(parser.getAttributeValue(null, "unit"));		
+		forecastData.setUnit(parser.getAttributeValue(null, ForecastData.TAG_UNIT));		
 		
 		forecastData.setValue(readText(parser));		
 		

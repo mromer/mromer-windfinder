@@ -10,9 +10,23 @@ public class ForecastItem implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final String WIND_SPEED 		= "wind_speed";
-	public static final String WIND_DIRECTION 	= "wind_direction";
+	public static final String TAG_DATE 			= "date";
+	public static final String TAG_TIME 			= "time";
 	
+	public static final String TAG_WIND_SPEED 			= "wind_speed";
+	public static final String TAG_WIND_DIRECTION 		= "wind_direction";
+	public static final String TAG_AIR_TEMPERATURE 		= "air_temperature";
+	public static final String TAG_WATER_TEMPERATURE	= "water_temperature";
+	public static final String TAG_WIND_GUSTS 			= "wind_gusts";
+	public static final String TAG_WEATHER 				= "weather";
+	public static final String TAG_CLOUDS				= "clouds";
+	public static final String TAG_PRECIPITATION 		= "precipitation";
+	public static final String TAG_PRECIPITATION_TYPE 	= "precipitation_type";
+	public static final String TAG_WAVE_HEIGHT 			= "wave_height";
+	public static final String TAG_WAVE_DIRECTION 		= "wave_direction";
+	public static final String TAG_WAVE_PERIOD 			= "wave_period";
+	public static final String TAG_AIR_PRESSURE 		= "air_pressure";
+		
 	private String date;
 	
 	private String time;
@@ -28,7 +42,7 @@ public class ForecastItem implements Serializable{
 	 * */
 	public Integer getWindSpeed() {
 
-		String windSpeedString = getForecastDataMap().get(ForecastItem.WIND_SPEED).getValue();
+		String windSpeedString = getForecastDataMap().get(ForecastItem.TAG_WIND_SPEED).getValue();
 
 		if (windSpeedString == null || windSpeedString.trim().length() == 0) {
 			return 0;
@@ -45,7 +59,7 @@ public class ForecastItem implements Serializable{
 	 * */
 	public String getWindDirection() {
 
-		String windDirection = getForecastDataMap().get(ForecastItem.WIND_DIRECTION).getValue();
+		String windDirection = getForecastDataMap().get(ForecastItem.TAG_WIND_DIRECTION).getValue();
 		
 		if (windDirection == null) {
 			return "";

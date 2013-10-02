@@ -11,9 +11,9 @@ public class SharedPreferencesUtil {
 	
 	private static String SHARED_STATIONS_LIST = "stations";
 	
-	public static String PROPERTY_NOTIFICATION_ACTIVED = "notification_actived";
-	public static String SHARED_WIND_LEVEL = "minimun_wind_level";
-	public static String SHARED_WIND_DIRECTION = "wind_direction";
+	public static String PROPERTY_NOTIFICATION_ACTIVED 	= "notification_actived";
+	public static String SHARED_WIND_LEVEL 				= "minimun_wind_level";
+	public static String SHARED_WIND_DIRECTION 			= "wind_direction";
 	
 	public static Map<String, String> getStationsSelected(Context context) {
 		

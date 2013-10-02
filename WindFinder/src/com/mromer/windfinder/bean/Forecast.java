@@ -3,14 +3,17 @@ package com.mromer.windfinder.bean;
 import java.io.Serializable;
 
 public class Forecast implements Serializable{
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public static final String TAG_TIMESTAMP = "timestamp";
+	public static final String TAG_STATION = "station";
+
 	private String timestamp;
-	
+
 	private ForecastStation stationForecast;
 
 	public String getTimestamp() {

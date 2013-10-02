@@ -10,6 +10,11 @@ public class ForecastStation implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	public static final String TAG_ID = "id";
+	public static final String TAG_NAME = "name";
+	public static final String TAG_TIMEZONE = "timezone";
+	public static final String TAG_FORECAST = "forecast";
+	
 
 	private String id;
 	

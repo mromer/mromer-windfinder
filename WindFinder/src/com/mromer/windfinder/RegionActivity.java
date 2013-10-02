@@ -49,7 +49,6 @@ public class RegionActivity extends SelectStationMainActivity {
 		setUIComponents();
 
 		drawListProcess();
-
 	}
 	
 	private void drawListProcess() {
@@ -73,7 +72,8 @@ public class RegionActivity extends SelectStationMainActivity {
 				@Override
 				public void taskFailure(TaskResult result) {
 
-					AlertUtils.showAlert(RegionActivity.this, result.getDesc(), "aceptar");
+					AlertUtils.showAlert(RegionActivity.this, result.getDesc(), 
+							getResources().getString(R.string.accept));
 
 				}
 			}).execute();
@@ -82,8 +82,7 @@ public class RegionActivity extends SelectStationMainActivity {
 			Country country = continentManager.getCountryById(continentId, countryId);
 
 			drawList(country.getRegionList());
-		}
-		
+		}		
 	}
 
 	private void setIntentData() {
@@ -101,9 +100,7 @@ public class RegionActivity extends SelectStationMainActivity {
 				    R.layout.list_item, R.id.name, regions);
 			
 			listView.setAdapter(adapter);
-
 		}
-
 	}
 	
 	protected void onListItemClick(AdapterView<?> adapterView, View v, int position, long id) {
@@ -124,7 +121,6 @@ public class RegionActivity extends SelectStationMainActivity {
 		intent.putExtra(BUNDLE_REGION_NAME, region.getName());
 
 		startActivity(intent);
-
 	}
 
 }

@@ -15,8 +15,13 @@ import android.widget.TextView;
 import com.mromer.windfinder.bean.Forecast;
 import com.mromer.windfinder.bean.ForecastData;
 import com.mromer.windfinder.bean.ForecastItem;
+import com.mromer.windfinder.utils.ResourcesUtil;
 import com.mromer.windfinder.utils.StringUtils;
 
+/**
+ * Show forecast info about a station and a date.
+ * 
+ * */
 public class MoreInfoActivity extends ActionBarActivity {
 
 	private final String TAG = this.getClass().getName();
@@ -34,8 +39,8 @@ public class MoreInfoActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.more_info);
 		
-		Bundle bundle = getIntent().getExtras();
-		
+		// Get extras
+		Bundle bundle = getIntent().getExtras();		
 		Forecast forecast = (Forecast) bundle.getSerializable(BUNDLE_FORECAST_INFO);
 		String date = bundle.getString(BUNDLE_FORECAST_INFO_DATE);
 		
@@ -47,7 +52,6 @@ public class MoreInfoActivity extends ActionBarActivity {
 	
 	private void showData(String date, Forecast forecast) {
 
-
 		// Set date
 		TextView tvDate = (TextView) findViewById(R.id.date);
 		tvDate.setText(StringUtils.toDate(date));
@@ -58,30 +62,34 @@ public class MoreInfoActivity extends ActionBarActivity {
 		for (ForecastItem forecastItem : forecast.getStationForecast().getForecastItems()) {
 			
 			if (forecastItem.getDate().equals(date)) {
+				// If we have the same date
 				addInfoForecastItemRow(forecastItem, dataInfo, inflater);
-			}
-			
-		}
-		
-		
+			}			
+		}		
 	}
 
+	
+	/**
+	 * Draw a row time and data info rows.
+	 * */
 	private void addInfoForecastItemRow(ForecastItem forecastItem, LinearLayout parentView, LayoutInflater inflater) {
 		
 		addItemTimeRow(parentView, inflater, StringUtils.toTime(forecastItem.getTime()));
 		
 		for (Entry<String, ForecastData> entry : forecastItem.getForecastDataMap().entrySet()){
-			String title = getTitle(entry.getKey());
+			String title = ResourcesUtil.getForecastTitle(this, entry.getKey());
 			String value = getValue(entry.getValue());
 			
 			if (title != null && value != null) {
 				addItemRow(parentView, inflater, title, value);
 			}
-		}		
-		
+		}
 	}
 	
 	
+	/**
+	 * Add a row with the time info in parentView.
+	 * */
 	private void addItemTimeRow(LinearLayout parentView,
 			LayoutInflater inflater, String time) {
 
@@ -91,10 +99,13 @@ public class MoreInfoActivity extends ActionBarActivity {
 		TextView timeTv = (TextView) row.findViewById(R.id.time);
 		timeTv.setText(time + " ");		
 		
-		parentView.addView(row);
-		
+		parentView.addView(row);		
 	}
+	
 
+	/**
+	 * Return the formated string value + unit in forecastData.
+	 * */
 	private String getValue(ForecastData forecastData) {
 		if (forecastData != null && forecastData.getValue() != null 
 				&& forecastData.getValue().length() > 0) {
@@ -110,48 +121,11 @@ public class MoreInfoActivity extends ActionBarActivity {
 		}
 		return null;
 	}
+	
 
-	private String getTitle(String key) {
-		
-		int idString = -1;
-		
-		if (key.equals("air_temperature")) {			
-			idString = R.string.air_temperature ;			
-		} else if (key.equals("water_temperature")) {
-			idString = R.string.water_temperature ;
-		} else if (key.equals("wind_direction")) {
-			idString = R.string.wind_direction ;
-		} else if (key.equals("wind_speed")) {
-			idString = R.string.wind_speed ;
-		} else if (key.equals("wind_gusts")) {
-			idString = R.string.wind_gusts ;
-		} else if (key.equals("weather")) {
-			idString = R.string.weather ;
-		} else if (key.equals("clouds")) {
-			idString = R.string.clouds ;
-		} else if (key.equals("precipitation")) {
-			idString = R.string.precipitation ;
-		} else if (key.equals("precipitation_type")) {
-			idString = R.string.precipitation_type ;
-		} else if (key.equals("wave_height")) {
-			idString = R.string.wave_height ;
-		} else if (key.equals("wave_direction")) {
-			idString = R.string.wave_direction ;
-		} else if (key.equals("wave_period")) {
-			idString = R.string.wave_period ;
-		} else if (key.equals("air_pressure")) {
-			idString = R.string.air_pressure ;
-		}
-		
-		if (idString >= 0) {
-			return getResources().getString(idString);
-		} else {
-			return null;
-		}
-		
-		
-	}
-
+	/**
+	 * Add a row with info title : value
+	 * */
 	private void addItemRow(LinearLayout parentView, LayoutInflater inflater,
 			String title, String value) {
 		LinearLayout row = (LinearLayout) inflater.inflate(
@@ -163,18 +137,17 @@ public class MoreInfoActivity extends ActionBarActivity {
 		TextView valueTv = (TextView) row.findViewById(R.id.value);
 		valueTv.setText(value);
 		
-		parentView.addView(row);		
-		
+		parentView.addView(row);			
 	}
+	
 
-	protected void setActionBar(String tittle) {
+	private void setActionBar(String tittle) {
 
 		actionBar = getSupportActionBar();	
 
 		actionBar.setTitle(tittle);		
 		
 		actionBar.setDisplayHomeAsUpEnabled(true);
-
 	}
 	
 	

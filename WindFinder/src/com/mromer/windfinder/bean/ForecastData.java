@@ -9,6 +9,8 @@ public class ForecastData implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	public static final String TAG_UNIT		= "unit";
+	
 	private String value;
 	private String unit;
 	

@@ -80,7 +80,8 @@ public class StationActivity extends SelectStationMainActivity {
 				@Override
 				public void taskFailure(TaskResult result) {
 
-					AlertUtils.showAlert(StationActivity.this, result.getDesc(), "aceptar");
+					AlertUtils.showAlert(StationActivity.this, result.getDesc(), 
+							getResources().getString(R.string.accept));
 
 				}
 			}).execute();

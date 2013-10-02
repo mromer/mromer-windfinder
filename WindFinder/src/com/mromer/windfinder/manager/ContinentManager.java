@@ -12,9 +12,7 @@ import com.mromer.windfinder.dao.ContinentDao;
 public class ContinentManager {
 	
 	private static ContinentManager INSTANCE;
-	
-	private final String TAG = this.getClass().getName();
-	
+		
 	private Context context;
 	
 	private ContinentDao continentDao;
