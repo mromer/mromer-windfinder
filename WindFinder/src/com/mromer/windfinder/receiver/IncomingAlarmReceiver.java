@@ -38,7 +38,6 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 	
 	private static final  int NOTIFICATION_ID = 1;
 	
-	private static final String PACKAGE_NAME = "com.mromer.windfinder";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -206,7 +205,8 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 	 * */
 	public static void startAlarmManager(Context context) {
 
-		PendingIntent  pi = PendingIntent.getBroadcast( context, 0, new Intent(PACKAGE_NAME), 0);
+		PendingIntent  pi = PendingIntent.getBroadcast( context, 0, new Intent(context, 
+				IncomingAlarmReceiver.class), 0);
 		
 		AlarmManager am = (AlarmManager)(context.getSystemService( Context.ALARM_SERVICE ));
 		

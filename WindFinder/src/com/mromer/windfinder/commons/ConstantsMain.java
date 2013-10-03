@@ -5,7 +5,7 @@ public class ConstantsMain {
 	/**
 	 * Alarm manager period time in milis.
 	 * */
-	public static final long ALARM_MANAGER_REPETITION_TIME = 60000;
+	public static final long ALARM_MANAGER_REPETITION_TIME = 6000;
 	
 	/**
 	 * Url api windfinder
