@@ -12,9 +12,9 @@ import com.mromer.windfinder.bean.Continent;
 import com.mromer.windfinder.bean.Country;
 import com.mromer.windfinder.bean.Region;
 import com.mromer.windfinder.manager.ContinentManager;
-import com.mromer.windfinder.task.LoadTaskResultI;
-import com.mromer.windfinder.task.LoadXmlTask;
-import com.mromer.windfinder.task.TaskResult;
+import com.mromer.windfinder.task.ContinentLoadTaskResultI;
+import com.mromer.windfinder.task.ContinentTaskResult;
+import com.mromer.windfinder.task.GetContinentTask;
 import com.mromer.windfinder.utils.AlertUtils;
 
 public class RegionActivity extends SelectStationMainActivity {
@@ -56,10 +56,10 @@ public class RegionActivity extends SelectStationMainActivity {
 
 		if (continentList == null) {
 
-			new LoadXmlTask(this, new LoadTaskResultI() {
+			new GetContinentTask(this, new ContinentLoadTaskResultI() {
 
 				@Override
-				public void taskSuccess(TaskResult result) {
+				public void taskSuccess(ContinentTaskResult result) {
 					continentList = continentManager.getAllContinents();
 					Country country = continentManager.getCountryById(continentId, countryId);
 
@@ -68,7 +68,7 @@ public class RegionActivity extends SelectStationMainActivity {
 				}
 
 				@Override
-				public void taskFailure(TaskResult result) {
+				public void taskFailure(ContinentTaskResult result) {
 
 					AlertUtils.showAlert(RegionActivity.this, result.getDesc(), 
 							getResources().getString(R.string.accept));

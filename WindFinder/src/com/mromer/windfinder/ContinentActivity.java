@@ -11,9 +11,9 @@ import android.widget.AdapterView;
 
 import com.mromer.windfinder.bean.Continent;
 import com.mromer.windfinder.manager.ContinentManager;
-import com.mromer.windfinder.task.LoadTaskResultI;
-import com.mromer.windfinder.task.LoadXmlTask;
-import com.mromer.windfinder.task.TaskResult;
+import com.mromer.windfinder.task.ContinentLoadTaskResultI;
+import com.mromer.windfinder.task.ContinentTaskResult;
+import com.mromer.windfinder.task.GetContinentTask;
 import com.mromer.windfinder.utils.ActivityUtil;
 import com.mromer.windfinder.utils.AlertUtils;
 
@@ -51,16 +51,16 @@ public class ContinentActivity extends SelectStationMainActivity  {
 
 		if (continents == null) {
 
-			new LoadXmlTask(this, new LoadTaskResultI() {
+			new GetContinentTask(this, new ContinentLoadTaskResultI() {
 
 				@Override
-				public void taskSuccess(TaskResult result) {
+				public void taskSuccess(ContinentTaskResult result) {
 					continents = continentManager.getAllContinents();
 					drawList(continents);
 				}
 
 				@Override
-				public void taskFailure(TaskResult result) {
+				public void taskFailure(ContinentTaskResult result) {
 
 					AlertUtils.showAlert(ContinentActivity.this, result.getDesc(), 
 							getResources().getString(R.string.accept));

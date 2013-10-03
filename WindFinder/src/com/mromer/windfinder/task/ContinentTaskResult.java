@@ -1,6 +1,6 @@
 package com.mromer.windfinder.task;
 
-public class TaskResult {
+public class ContinentTaskResult {
 	
 	private boolean error;
 	

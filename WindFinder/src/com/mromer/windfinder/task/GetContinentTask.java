@@ -8,13 +8,13 @@ import com.mromer.windfinder.R;
 import com.mromer.windfinder.manager.ContinentManager;
 
 
-public class LoadXmlTask {
+public class GetContinentTask {
 	
 	private Context context;	
-	private LoadTaskResultI loadTaskResult;
+	private ContinentLoadTaskResultI loadTaskResult;
 	
 	
-	public LoadXmlTask(Context context, LoadTaskResultI loadTaskResult) {
+	public GetContinentTask(Context context, ContinentLoadTaskResultI loadTaskResult) {
 		this.context = context;		
 		this.loadTaskResult = loadTaskResult;
 	}
@@ -23,7 +23,7 @@ public class LoadXmlTask {
 		new LoadingXmlTask().execute();
 	}
 
-	public class LoadingXmlTask extends AsyncTask<Context, String, TaskResult> {		
+	public class LoadingXmlTask extends AsyncTask<Context, String, ContinentTaskResult> {		
 
 		private ProgressDialog progressDialog;
 
@@ -38,9 +38,9 @@ public class LoadXmlTask {
 		}
 
 		@Override
-		protected TaskResult doInBackground(Context... args) {	
+		protected ContinentTaskResult doInBackground(Context... args) {	
 			
-			TaskResult result = new TaskResult();
+			ContinentTaskResult result = new ContinentTaskResult();
 			
 			try {
 				
@@ -66,7 +66,7 @@ public class LoadXmlTask {
 		}
 
 		@Override
-		protected void onPostExecute(TaskResult result) {
+		protected void onPostExecute(ContinentTaskResult result) {
 			
 			progressDialog.dismiss();
 			
