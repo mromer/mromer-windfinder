@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 import com.mromer.windfinder.bean.Continent;
 import com.mromer.windfinder.manager.ContinentManager;
@@ -72,16 +71,6 @@ public class ContinentActivity extends SelectStationMainActivity  {
 		} else {
 
 			drawList(continents);
-		}
-	}
-
-	private void drawList(ArrayList<Continent> continents) {
-		if (continents != null) {			
-			
-			ArrayAdapter<Continent> adapter = new ArrayAdapter<Continent>(this, 
-				    R.layout.list_item, R.id.name, continents);
-			
-			listView.setAdapter(adapter);
 		}
 	}
 	

@@ -1,14 +1,12 @@
 package com.mromer.windfinder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 import com.mromer.windfinder.bean.Continent;
 import com.mromer.windfinder.bean.Country;
@@ -92,16 +90,6 @@ public class RegionActivity extends SelectStationMainActivity {
 		countryName = getIntent().getExtras().getString(BUNDLE_COUNTRY_NAME);	
 	}
 
-
-	private void drawList(List<Region> regions) {
-		if (regions != null) {
-
-			ArrayAdapter<Region> adapter = new ArrayAdapter<Region>(this, 
-				    R.layout.list_item, R.id.name, regions);
-			
-			listView.setAdapter(adapter);
-		}
-	}
 	
 	protected void onListItemClick(AdapterView<?> adapterView, View v, int position, long id) {
 

@@ -1,8 +1,13 @@
 package com.mromer.windfinder;
 
+import java.util.List;
+
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,9 +16,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.mromer.windfinder.adapter.GeneralListAdapter;
+import com.mromer.windfinder.adapter.StationListAdapter;
+import com.mromer.windfinder.bean.DataType;
 import com.mromer.windfinder.utils.ActivityUtil;
 
-public abstract class SelectStationMainActivity extends ActionBarActivity {	
+public abstract class SelectStationMainActivity extends ActionBarActivity implements OnQueryTextListener {	
 	
 	public final static String BUNDLE_CONTINENT_ID = "BUNDLE_CONTINENT_ID";
 	public final static String BUNDLE_CONTINENT_NAME = "BUNDLE_CONTINENT_NAME";
@@ -27,7 +35,9 @@ public abstract class SelectStationMainActivity extends ActionBarActivity {
 
 	private ActionBar actionBar;
 
-	protected ListView listView;	
+	private ListView listView;	
+	
+	private GeneralListAdapter listAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +108,57 @@ public abstract class SelectStationMainActivity extends ActionBarActivity {
 		}
 	}
 
+	protected void drawList(List<? extends DataType> listData) {
+		if (listData != null) {
+
+			listAdapter = new StationListAdapter(this, listData);
+			listView.setAdapter(listAdapter);
+		}
+	}	
+	
+	@Override
+	public boolean onQueryTextChange(String text) {
+		listAdapter.getFilter().filter(text);
+		return false;
+	}
+
+
+	@Override
+	public boolean onQueryTextSubmit(String arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.select_station_menu, menu);
+
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+		if (searchView != null) {
+			searchView.setOnQueryTextListener(this);
+		}
 		return true;
 	}
+
+	public ListView getListView() {
+		return listView;
+	}
+
+	public void setListView(ListView listView) {
+		this.listView = listView;
+	}
+
+	public GeneralListAdapter getListAdapter() {
+		return listAdapter;
+	}
+
+	public void setListAdapter(GeneralListAdapter listAdapter) {
+		this.listAdapter = listAdapter;
+	}
+	
+	
 
 }

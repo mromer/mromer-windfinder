@@ -107,4 +107,34 @@ public class GeneralListAdapter extends BaseAdapter implements Filterable {
 	}
 
 
+	public Context getContext() {
+		return context;
+	}
+
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+
+	public List<DataType> getListData() {
+		return listData;
+	}
+
+
+	public void setListData(List<DataType> listData) {
+		this.listData = listData;
+	}
+
+
+	public List<DataType> getListDataFiltered() {
+		return listDataFiltered;
+	}
+
+
+	public void setListDataFiltered(List<DataType> listDataFiltered) {
+		this.listDataFiltered = listDataFiltered;
+	}
+
+
 }
