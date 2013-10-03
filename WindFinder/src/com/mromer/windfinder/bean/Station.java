@@ -2,7 +2,7 @@ package com.mromer.windfinder.bean;
 
 
 
-public class Station {
+public class Station implements DataType {
 	
 	public static final String TAG_STATION = "station";
 	public static final String TAG_STATION_NAME = "name";

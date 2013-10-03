@@ -6,7 +6,12 @@ import java.util.List;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -22,7 +27,7 @@ import com.mromer.windfinder.task.TaskResult;
 import com.mromer.windfinder.utils.AlertUtils;
 import com.mromer.windfinder.utils.SharedPreferencesUtil;
 
-public class StationActivity extends SelectStationMainActivity {
+public class StationActivity extends SelectStationMainActivity implements OnQueryTextListener{
 
 	private final String TAG = this.getClass().getName();
 
@@ -37,17 +42,19 @@ public class StationActivity extends SelectStationMainActivity {
 
 	private ArrayList<Continent> continentList;		
 
+	private StationListAdapter stationListAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		Log.d(TAG, "onCreate " + TAG);
-		
+
 		super.onCreate(savedInstanceState);
 
 		setActionBar(R.string.select_station);
 
 		setIntentData();
-		
+
 		setHeader(continentName + " | " + countryName + " | " + regionName);
 
 		setUIComponents();
@@ -55,7 +62,7 @@ public class StationActivity extends SelectStationMainActivity {
 		drawListProcess();
 
 	}
-	
+
 
 	private void drawListProcess() {
 
@@ -110,8 +117,8 @@ public class StationActivity extends SelectStationMainActivity {
 	private void drawList(List<Station> stations) {
 		if (stations != null) {
 
-			StationListAdapter adapter = new StationListAdapter(this, stations);
-			listView.setAdapter(adapter);
+			stationListAdapter = new StationListAdapter(this, stations);
+			listView.setAdapter(stationListAdapter);
 
 		}
 
@@ -137,6 +144,34 @@ public class StationActivity extends SelectStationMainActivity {
 
 		((BaseAdapter) adapterView.getAdapter()).notifyDataSetChanged();
 
+	}
+
+
+	@Override
+	public boolean onQueryTextChange(String text) {
+		stationListAdapter.getFilter().filter(text);
+		return false;
+	}
+
+
+	@Override
+	public boolean onQueryTextSubmit(String arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.select_station_menu, menu);
+
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+		if (searchView != null) {
+			searchView.setOnQueryTextListener(this);
+		}
+		return true;
 	}
 
 

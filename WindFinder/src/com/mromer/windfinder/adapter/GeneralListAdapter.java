@@ -3,7 +3,6 @@ package com.mromer.windfinder.adapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,36 +14,32 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.mromer.windfinder.R;
-import com.mromer.windfinder.bean.Station;
-import com.mromer.windfinder.utils.SharedPreferencesUtil;
+import com.mromer.windfinder.bean.DataType;
 
-public class StationListAdapter extends BaseAdapter implements Filterable {
+public class GeneralListAdapter extends BaseAdapter implements Filterable {
 
 	private Context context;
 
-	private List<Station> listStation;
-	private List<Station> listStationFiltered;
+	private List<DataType> listData;
+	private List<DataType> listDataFiltered;	
 
-	private Map<String, String> stationsSelected;
-
-	public StationListAdapter(Context context, List<Station> listStation) {
+	public GeneralListAdapter(Context context, List<DataType> listData) {
 		this.context = context;
-		this.listStation = listStation;
-
-		stationsSelected = SharedPreferencesUtil.getStationsSelected(context);
 		
-		listStationFiltered = listStation;
+		this.listData = listData;		
+		
+		listDataFiltered = listData;
 	}
 
 
 	@Override
 	public int getCount() {
-		return listStationFiltered.size();
+		return listDataFiltered.size();
 	}
 
 	@Override
 	public Object getItem(int arg0) {
-		return listStationFiltered.get(arg0);
+		return listDataFiltered.get(arg0);
 	}
 
 	@Override
@@ -55,7 +50,7 @@ public class StationListAdapter extends BaseAdapter implements Filterable {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		Station station = listStationFiltered.get(position);
+		DataType data = listDataFiltered.get(position);
 
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
@@ -65,26 +60,11 @@ public class StationListAdapter extends BaseAdapter implements Filterable {
 
 		TextView name = (TextView) convertView.findViewById(R.id.name);
 		//due to italic text style				
-		name.setText(station.getName() + " ");  		
-
-		if (stationsSelected.get(station.getId()) != null) {
-			// It is selected			
-			convertView.setBackgroundColor(context.getResources().getColor(R.color.orange_light));			
-		} else {			
-			convertView.setBackgroundResource(android.R.drawable.list_selector_background);
-		}		
+		name.setText(data.getName() + " ");		
 
 		return convertView;
 	}
-
-	@Override
-	public void notifyDataSetChanged() {		
-
-		stationsSelected = SharedPreferencesUtil.getStationsSelected(context);
-
-		super.notifyDataSetChanged();
-	}
-
+	
 
 	@Override
 	public Filter getFilter() {
@@ -95,7 +75,7 @@ public class StationListAdapter extends BaseAdapter implements Filterable {
 			@Override
 			protected void publishResults(CharSequence constraint, FilterResults results) {
 
-				listStationFiltered = (List<Station>) results.values;
+				listDataFiltered = (List<DataType>) results.values;
 				notifyDataSetChanged();
 			}
 
@@ -103,21 +83,21 @@ public class StationListAdapter extends BaseAdapter implements Filterable {
 			protected FilterResults performFiltering(CharSequence constraint) {
 
 				FilterResults results = new FilterResults();
-				ArrayList<Station> filteredStations = new ArrayList<Station>();
+				ArrayList<DataType> filteredData = new ArrayList<DataType>();
 
 				// perform your search here using the searchConstraint String.
 
 				constraint = constraint.toString().toLowerCase(Locale.getDefault());
 
-				for (int i = 0; i < listStation.size(); i++) {
-					Station station = listStation.get(i);
-					if (station.getName().toLowerCase().contains(constraint.toString()))  {
-						filteredStations.add(station);
+				for (int i = 0; i < listData.size(); i++) {
+					DataType data = listData.get(i);
+					if (data.getName().toLowerCase(Locale.getDefault()).contains(constraint.toString())) {
+						filteredData.add(data);
 					}
 				}
 
-				results.count = filteredStations.size();
-				results.values = filteredStations;
+				results.count = filteredData.size();
+				results.values = filteredData;
 
 				return results;				
 			}			
@@ -125,7 +105,6 @@ public class StationListAdapter extends BaseAdapter implements Filterable {
 
 		return filter;
 	}
-
 
 
 }

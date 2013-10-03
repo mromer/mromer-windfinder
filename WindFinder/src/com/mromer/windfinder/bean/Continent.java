@@ -2,7 +2,7 @@ package com.mromer.windfinder.bean;
 
 import java.util.List;
 
-public class Continent  {
+public class Continent implements DataType {
 
 	public static final String TAG_CONTINENT = "continent";
 	public static final String TAG_CONTINENT_NAME = "name";

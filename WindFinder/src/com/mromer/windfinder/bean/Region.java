@@ -2,7 +2,7 @@ package com.mromer.windfinder.bean;
 
 import java.util.List;
 
-public class Region {
+public class Region implements DataType {
 	
 	public static final String TAG_REGION = "region";
 	public static final String TAG_REGION_NAME = "name";
