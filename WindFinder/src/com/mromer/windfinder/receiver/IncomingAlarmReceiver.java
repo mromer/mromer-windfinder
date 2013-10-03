@@ -44,7 +44,9 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 
 		this.context = context;
 
-		processNotification();
+		if (!WindInfoActivity.FLAG_FOREGROUND) {
+			processNotification();
+		}		
 	}
 
 	

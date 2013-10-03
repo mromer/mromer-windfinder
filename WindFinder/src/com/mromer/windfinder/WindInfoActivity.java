@@ -52,9 +52,9 @@ public class WindInfoActivity extends ActionBarActivity  {
 	 */
 	private PagerAdapter mPagerAdapter;
 
-
 	private ForecastTaskResult forecastTaskResult;
 	
+	public static boolean FLAG_FOREGROUND = false;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +71,17 @@ public class WindInfoActivity extends ActionBarActivity  {
 		processGetForecastTask(getListStationsSelected());
 	}
 
+	@Override
+	protected void onResume() {	
+		super.onResume();		
+		FLAG_FOREGROUND = true;
+	}
+	
+	@Override
+	protected void onPause() {		
+		super.onPause();
+		FLAG_FOREGROUND = false;
+	}
 
 	protected void refreshAction() {
 		// Get the forecast (http) and draw the viewpager
