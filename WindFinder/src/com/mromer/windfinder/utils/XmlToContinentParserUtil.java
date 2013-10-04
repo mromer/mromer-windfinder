@@ -20,13 +20,15 @@ import com.mromer.windfinder.bean.Station;
 public class XmlToContinentParserUtil {
 
 	// We don't use namespaces
-	private static final String ns = null;
-
-	private final String FILE_NAME = "stations_by_country.xml";
+	private static final String ns = null;	
 
 	private final String START_TAG = "stations";
 
-	public ArrayList<Continent> getContinents(Context context) {
+	/**
+	 * Parse a xml file to <code>ArrayList<Continent></code>.
+	 * File must be in assets folder.
+	 * */
+	public ArrayList<Continent> getContinents(Context context, String fileName) {
 
 		ArrayList<Continent> continents = null;
 
@@ -35,7 +37,7 @@ public class XmlToContinentParserUtil {
 
 		try {
 
-			ims = assetManager.open(FILE_NAME);
+			ims = assetManager.open(fileName);
 
 			continents = parse(ims);		
 

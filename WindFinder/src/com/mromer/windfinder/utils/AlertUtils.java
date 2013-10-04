@@ -21,8 +21,11 @@ public class AlertUtils {
 	}
 
 
-	public static void showAlertWithAction(Context context, String message, String positiveButtonString, 
-			String negativeButtonString, DialogInterface.OnClickListener positiveAction, 
+	public static void showAlertWithAction(Context context, 
+			String message, 
+			String positiveButtonString, 
+			String negativeButtonString, 
+			DialogInterface.OnClickListener positiveAction, 
 			DialogInterface.OnClickListener negativeAction) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);

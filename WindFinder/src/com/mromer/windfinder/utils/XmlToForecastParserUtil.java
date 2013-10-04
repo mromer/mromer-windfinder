@@ -23,7 +23,9 @@ public class XmlToForecastParserUtil {
 	
 	private static final String TAG_FORECASTS = "forecasts";
 
-
+	/**
+	 * Parse from xml inputStream to <code>Forecast</code>.
+	 * */
 	public Forecast getForecast(InputStream inputStream) {
 		
 		Forecast forecast = null;		
@@ -32,12 +34,12 @@ public class XmlToForecastParserUtil {
 
 			forecast = parse(inputStream);		
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException e) {			
 			e.printStackTrace();
-		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
+			
+		} catch (XmlPullParserException e) {			
 			e.printStackTrace();
+			
 		} finally {
 
 			try {
@@ -46,8 +48,7 @@ public class XmlToForecastParserUtil {
 					inputStream.close();
 				}
 
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			} catch (IOException e) {				
 				e.printStackTrace();
 			}
 		}

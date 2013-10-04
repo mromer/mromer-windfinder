@@ -11,8 +11,10 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
@@ -212,21 +214,18 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 		
 		AlarmManager am = (AlarmManager)(context.getSystemService( Context.ALARM_SERVICE ));
 		
-		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
+		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 
+				SystemClock.elapsedRealtime() + ConstantsMain.ALARM_MANAGER_REPETITION_TIME, 
 				ConstantsMain.ALARM_MANAGER_REPETITION_TIME, 
-				ConstantsMain.ALARM_MANAGER_REPETITION_TIME, pi);
+				pi);
 	}
 	
 
-	private void sendNotificacion(String tittle) {
+	private void sendNotificacion(String title) {
 
-		Log.d("", "Sending notification " + tittle);
-
-		NotificationCompat.Builder mBuilder =
-				new NotificationCompat.Builder(context)
-		.setSmallIcon(R.drawable.wind_icon_orange)
-		.setContentTitle(context.getResources().getString(R.string.app_name))
-		.setContentText(tittle);
+		Log.d("", "Sending notification " + title);
+		
+		NotificationCompat.Builder mBuilder = createNotificationBuilder(title);		
 
 		// Creates an explicit intent for an Activity in your app
 		Intent resultIntent = new Intent(context, WindInfoActivity.class);
@@ -242,15 +241,29 @@ public class IncomingAlarmReceiver extends BroadcastReceiver {
 		stackBuilder.addNextIntent(resultIntent);
 		
 		PendingIntent resultPendingIntent =
-				stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+				stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);		
 		
 		mBuilder.setContentIntent(resultPendingIntent);
 		
 		NotificationManager mNotificationManager =
 				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		// mId allows you to update the notification later on.
-
-		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());		
-
+		// mId allows you to update the notification later on.		
+		
+		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());	
 	}
+
+
+	private Builder createNotificationBuilder(String title) {
+		
+		NotificationCompat.Builder mBuilder =
+				new NotificationCompat.Builder(context)
+		.setSmallIcon(R.drawable.wind_icon_orange)
+		.setContentTitle(context.getResources().getString(R.string.app_name))
+		.setContentText(title)
+		.setLights(0xfff1a62f, 1000, 1000)
+		.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+		
+		return mBuilder;
+	}
+
 }

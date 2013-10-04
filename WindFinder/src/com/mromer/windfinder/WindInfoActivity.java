@@ -276,10 +276,14 @@ public class WindInfoActivity extends ActionBarActivity  {
 		String warningText = getResources().getString(R.string.remove_station_warning);
 		String acceptText = getResources().getString(R.string.accept);
 		String cancelText = getResources().getString(R.string.cancel);
-		AlertUtils.showAlertWithAction(this, warningText + " " +
-				forecast.getStationForecast().getName() + "?", acceptText , cancelText, 
-				positiveAction, negativeAction);
+		String title = warningText + " " +	forecast.getStationForecast().getName() + "?";
 		
+		AlertUtils.showAlertWithAction(this, 
+				title, 
+				acceptText , 
+				cancelText, 
+				positiveAction, 
+				negativeAction);		
 	}
 
 

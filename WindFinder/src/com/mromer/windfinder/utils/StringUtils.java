@@ -6,6 +6,9 @@ public class StringUtils {
 	
 	private final static String TIMEZONE_UTC = "UTC";
 
+	/**
+	 * Fron HHMMXXX... to HH:MM.
+	 * */
 	public static String toTime(String time) {
 
 		String hour = time.substring(0, 2);
@@ -14,6 +17,9 @@ public class StringUtils {
 		return hour + ":" + minute;
 	}
 
+	/**
+	 * From YYYYMMDD to YYYY/MM/DD
+	 * */
 	public static String toDate(String date) {
 
 		String year = date.substring(0, 4);
@@ -23,6 +29,10 @@ public class StringUtils {
 		return year + "/" + month + "/" + day;
 	}
 	
+	/**
+	 * From X to UTC +X.
+	 * From -X to UTC -X.
+	 * */
 	public static String toTimezone(String timezone) {
 		
 		if (Integer.parseInt(timezone) <= 0) {
@@ -33,7 +43,7 @@ public class StringUtils {
 
 	}
 	
-	
+
 	public static String oneDecimal(String data) {
 		
 		Float dataFloat =Float.parseFloat(data);

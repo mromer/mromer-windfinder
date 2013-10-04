@@ -10,6 +10,8 @@ import com.mromer.windfinder.bean.Region;
 import com.mromer.windfinder.utils.XmlToContinentParserUtil;
 
 public class ContinentDao {
+	
+	private final String FILE_NAME = "stations_by_country.xml";
 
 	private ArrayList<Continent> continents;
 
@@ -21,8 +23,11 @@ public class ContinentDao {
 	}
 
 
+	/**
+	 * Load continents from file
+	 * */
 	public void loadContinents() {
-		continents = new XmlToContinentParserUtil().getContinents(this.context);
+		continents = new XmlToContinentParserUtil().getContinents(this.context, FILE_NAME);
 	}
 
 
